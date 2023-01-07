@@ -18,7 +18,8 @@ import java.time.LocalDateTime;
 })
 @Entity
 @NoArgsConstructor
-public class CurrencyPriceMysql {
+public class PriceInfoMysql {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -31,5 +32,4 @@ public class CurrencyPriceMysql {
 
     @Column(nullable = false)
     private Double price;
-
 }

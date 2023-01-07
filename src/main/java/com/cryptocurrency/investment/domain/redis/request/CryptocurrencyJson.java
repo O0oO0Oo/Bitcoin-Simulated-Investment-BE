@@ -15,17 +15,13 @@ import java.util.HashMap;
 public class CryptocurrencyJson {
     @JsonProperty("status")
     private String status;
-
     @JsonProperty("data")
     private CryptocurrencyJsonInnerInfo cryptocurrencyJsonInnerInfo;
 
     private HashMap<String, CryptocurrencyJsonPriceData> fileds = new HashMap<>();
-
     public class CryptocurrencyJsonInnerInfo{
-
         @JsonProperty("date")
         private Long timestamp;
-
         @JsonAnySetter
         public void setFiled(String field, CryptocurrencyJsonPriceData value) {
             fileds.put(field, value);
@@ -34,12 +30,10 @@ public class CryptocurrencyJson {
         public void setTimestamp(Long timestamp) {
             this.timestamp = timestamp;
         }
-
         @JsonAnyGetter
         public HashMap<String, com.cryptocurrency.investment.domain.redis.request.CryptocurrencyJsonPriceData> getFields() {
             return fileds;
         }
-
         public Long getTimestamp() {
             return timestamp;
         }
