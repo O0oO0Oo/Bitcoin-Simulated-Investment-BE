@@ -10,7 +10,7 @@ import java.time.LocalDateTime;
 
 
 @Data
-@RedisHash
+@RedisHash("price")
 @NoArgsConstructor
 public class CurrencyPriceRedis implements Serializable{
     @Id
@@ -18,11 +18,11 @@ public class CurrencyPriceRedis implements Serializable{
 
     private String currencyName;
 
-    private LocalDateTime timestamp;
+    private Long timestamp;
 
     private Double price;
 
-    public CurrencyPriceRedis(String  id, String currencyName, LocalDateTime timestamp, Double price) {
+    public CurrencyPriceRedis(String  id, String currencyName, Long timestamp, Double price) {
         this.id = id;
         this.currencyName = currencyName;
         this.timestamp = timestamp;

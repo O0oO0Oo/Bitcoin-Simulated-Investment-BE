@@ -1,12 +1,11 @@
 package com.cryptocurrency.investment.scheduler.quartz;
 
-import com.cryptocurrency.investment.Service.redis.CurrencyPriceRedisService;
 import com.cryptocurrency.investment.domain.redis.CurrencyPriceRedis;
 import com.cryptocurrency.investment.domain.redis.request.CryptocurrencyJson;
 import com.cryptocurrency.investment.domain.redis.request.CryptocurrencyJsonPriceData;
+import com.cryptocurrency.investment.repository.redis.CurrencyPriceInfoRedisRepository;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.quartz.Job;
-import org.quartz.JobDataMap;
 import org.quartz.JobExecutionContext;
 import org.quartz.JobExecutionException;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,7 +21,7 @@ import java.util.Map;
 public class PeriodicGetJsonDataTask implements Job {
 
     @Autowired
-    CurrencyPriceRedisService redisService;
+    CurrencyPriceInfoRedisRepository redisRepository;
 
     /**
      * Todo: 현재는 request 패키지의 Class들에 ObjectMapper를 통해 매핑 후 다시 CurrencyPriceRedis 생성자를 통해 저장하고 있다.
@@ -47,16 +46,16 @@ public class PeriodicGetJsonDataTask implements Job {
             throw new RuntimeException(e);
         }
 
-        CryptocurrencyJson.CryptocurrencyJsonInnerInfo innerInfo = readValue.getCryptocurrencyJsonInnerInfo();
         HashMap<String, CryptocurrencyJsonPriceData> fields = readValue.getCryptocurrencyJsonInnerInfo().getFields();
-        LocalDateTime localDateTime = readValue.getCryptocurrencyJsonInnerInfo().getTimestamp();
+        Long localDateTime = readValue.getCryptocurrencyJsonInnerInfo().getTimestamp();
 
         for (Map.Entry<String, CryptocurrencyJsonPriceData> entry : fields.entrySet()) {
             CurrencyPriceRedis priceRedis = new CurrencyPriceRedis(
-                    readValue.getCryptocurrencyJsonInnerInfo().getTimestamp() + entry.getKey(),
-                    entry.getKey(),localDateTime,
+                    entry.getKey() + readValue.getCryptocurrencyJsonInnerInfo().getTimestamp(),
+                    entry.getKey(),
+                    localDateTime,
                     entry.getValue().getClosing_price());
-            redisService.savePriceInfo(priceRedis);
+            redisRepository.save(priceRedis);
         }
     }
 }

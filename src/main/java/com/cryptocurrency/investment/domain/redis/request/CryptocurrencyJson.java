@@ -24,7 +24,7 @@ public class CryptocurrencyJson {
     public class CryptocurrencyJsonInnerInfo{
 
         @JsonProperty("date")
-        private LocalDateTime timestamp;
+        private Long timestamp;
 
         @JsonAnySetter
         public void setFiled(String field, CryptocurrencyJsonPriceData value) {
@@ -32,8 +32,7 @@ public class CryptocurrencyJson {
         }
 
         public void setTimestamp(Long timestamp) {
-            LocalDateTime localDateTime = Instant.ofEpochMilli(timestamp).atZone(ZoneId.systemDefault()).toLocalDateTime();
-            this.timestamp = localDateTime.truncatedTo(ChronoUnit.SECONDS);
+            this.timestamp = timestamp;
         }
 
         @JsonAnyGetter
@@ -41,7 +40,7 @@ public class CryptocurrencyJson {
             return fileds;
         }
 
-        public LocalDateTime getTimestamp() {
+        public Long getTimestamp() {
             return timestamp;
         }
     }
