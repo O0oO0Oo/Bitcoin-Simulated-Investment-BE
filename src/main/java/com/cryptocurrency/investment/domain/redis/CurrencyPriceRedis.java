@@ -14,8 +14,7 @@ import java.time.LocalDateTime;
 @NoArgsConstructor
 public class CurrencyPriceRedis implements Serializable{
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    private String id;
 
     private String currencyName;
 
@@ -23,7 +22,7 @@ public class CurrencyPriceRedis implements Serializable{
 
     private Double price;
 
-    public CurrencyPriceRedis(Long id, String currencyName, LocalDateTime timestamp, Double price) {
+    public CurrencyPriceRedis(String  id, String currencyName, LocalDateTime timestamp, Double price) {
         this.id = id;
         this.currencyName = currencyName;
         this.timestamp = timestamp;
