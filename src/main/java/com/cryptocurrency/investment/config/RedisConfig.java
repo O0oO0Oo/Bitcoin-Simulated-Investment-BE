@@ -25,8 +25,8 @@ public class RedisConfig {
     }
 
     @Bean
-    public RedisTemplate<CurrencyPriceRedis , Long > redisTemplate() {
-        RedisTemplate<CurrencyPriceRedis, Long > redisTemplate = new RedisTemplate<>();
+    public RedisTemplate<CurrencyPriceRedis  , String> redisTemplate() {
+        RedisTemplate<CurrencyPriceRedis , String> redisTemplate = new RedisTemplate<>();
         redisTemplate.setConnectionFactory(redisConnectionFactory());
         return redisTemplate;
     }

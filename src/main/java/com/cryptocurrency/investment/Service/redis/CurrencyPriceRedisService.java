@@ -19,7 +19,7 @@ public class CurrencyPriceRedisService {
         redisRepository.save(priceRedis);
     }
 
-    public CurrencyPriceRedis getPriceInfo(Long id) {
+    public CurrencyPriceRedis getPriceInfo(String  id) {
         return redisRepository.findById(id).orElse(null);
     }
 }

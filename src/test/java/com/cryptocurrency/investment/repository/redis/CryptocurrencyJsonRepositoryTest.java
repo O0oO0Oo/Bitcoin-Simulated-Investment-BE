@@ -14,6 +14,7 @@ import java.io.InputStream;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.time.LocalDateTime;
+import java.time.temporal.ChronoUnit;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -44,11 +45,7 @@ class CryptocurrencyJsonRepositoryTest {
         //when && then
         for (Map.Entry<String, CryptocurrencyJsonPriceData> entry : fields.entrySet()
         ) {
-            System.out.println(entry.getKey() + " = " + entry.getValue().getClosing_price() + " Date : " + readValue.getCryptocurrencyJsonInnerInfo().getTimestamp());
-            CurrencyPriceRedis priceRedis = new CurrencyPriceRedis(++idl,entry.getKey(),LocalDateTime.now(),entry.getValue().getClosing_price());
-            redisService.savePriceInfo(priceRedis);
+            System.out.println(entry.getKey() );//+ " = " + entry.getValue().getClosing_price() + " Date : " + readValue.getCryptocurrencyJsonInnerInfo().getTimestamp());
         }
     }
 }
-
-
