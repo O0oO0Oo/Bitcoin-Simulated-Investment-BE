@@ -4,17 +4,13 @@ import com.fasterxml.jackson.annotation.JsonAnyGetter;
 import com.fasterxml.jackson.annotation.JsonAnySetter;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Data;
-
-import java.time.Instant;
-import java.time.LocalDateTime;
-import java.time.ZoneId;
-import java.time.temporal.ChronoUnit;
 import java.util.HashMap;
 
 @Data
 public class CryptocurrencyJson {
     @JsonProperty("status")
     private String status;
+
     @JsonProperty("data")
     private CryptocurrencyJsonInnerInfo cryptocurrencyJsonInnerInfo;
 
