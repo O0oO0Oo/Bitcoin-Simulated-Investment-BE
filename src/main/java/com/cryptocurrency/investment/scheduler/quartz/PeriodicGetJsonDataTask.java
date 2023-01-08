@@ -1,12 +1,11 @@
 package com.cryptocurrency.investment.scheduler.quartz;
 
-import com.cryptocurrency.investment.Service.redis.CurrencyPriceRedisService;
-import com.cryptocurrency.investment.domain.redis.CurrencyPriceRedis;
-import com.cryptocurrency.investment.domain.redis.request.CryptocurrencyJson;
-import com.cryptocurrency.investment.domain.redis.request.CryptocurrencyJsonPriceData;
+import com.cryptocurrency.investment.domain.redis.PriceInfoRedis;
+import com.cryptocurrency.investment.domain.redis.request.CryptoJson;
+import com.cryptocurrency.investment.domain.redis.request.CryptoPriceJson;
+import com.cryptocurrency.investment.repository.redis.PriceInfoRedisRepository;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.quartz.Job;
-import org.quartz.JobDataMap;
 import org.quartz.JobExecutionContext;
 import org.quartz.JobExecutionException;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,15 +13,13 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.net.HttpURLConnection;
 import java.net.URL;
-import java.text.MessageFormat;
-import java.time.LocalDateTime;
 import java.util.HashMap;
 import java.util.Map;
 
 public class PeriodicGetJsonDataTask implements Job {
 
     @Autowired
-    CurrencyPriceRedisService redisService;
+    PriceInfoRedisRepository redisRepository;
 
     /**
      * Todo: 현재는 request 패키지의 Class들에 ObjectMapper를 통해 매핑 후 다시 CurrencyPriceRedis 생성자를 통해 저장하고 있다.
@@ -34,7 +31,7 @@ public class PeriodicGetJsonDataTask implements Job {
         HttpURLConnection conn;
         InputStream responseBody;
         ObjectMapper mapper = new ObjectMapper();
-        CryptocurrencyJson readValue;
+        CryptoJson readValue;
         try {
             url = new URL("https://api.bithumb.com/public/ticker/ALL");
             conn = (HttpURLConnection) url.openConnection();
@@ -42,21 +39,22 @@ public class PeriodicGetJsonDataTask implements Job {
             conn.setRequestProperty("Content-Type", "application/json");
 
             responseBody = conn.getInputStream();
-            readValue = mapper.readValue(responseBody, CryptocurrencyJson.class);
+            readValue = mapper.readValue(responseBody, CryptoJson.class);
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
 
-        CryptocurrencyJson.CryptocurrencyJsonInnerInfo innerInfo = readValue.getCryptocurrencyJsonInnerInfo();
-        HashMap<String, CryptocurrencyJsonPriceData> fields = readValue.getCryptocurrencyJsonInnerInfo().getFields();
-        LocalDateTime localDateTime = readValue.getCryptocurrencyJsonInnerInfo().getTimestamp();
+        HashMap<String, CryptoPriceJson> fields = readValue.getCryptocurrencyJsonInnerInfo().getFields();
+        Long localDateTime = readValue.getCryptocurrencyJsonInnerInfo().getTimestamp();
+        localDateTime = localDateTime - localDateTime % 1000;
 
-        for (Map.Entry<String, CryptocurrencyJsonPriceData> entry : fields.entrySet()) {
-            CurrencyPriceRedis priceRedis = new CurrencyPriceRedis(
-                    readValue.getCryptocurrencyJsonInnerInfo().getTimestamp() + entry.getKey(),
-                    entry.getKey(),localDateTime,
+        for (Map.Entry<String, CryptoPriceJson> entry : fields.entrySet()) {
+            PriceInfoRedis priceRedis = new PriceInfoRedis(
+                    entry.getKey() + localDateTime,
+                    entry.getKey(),
+                    localDateTime,
                     entry.getValue().getClosing_price());
-            redisService.savePriceInfo(priceRedis);
+            redisRepository.save(priceRedis);
         }
     }
 }

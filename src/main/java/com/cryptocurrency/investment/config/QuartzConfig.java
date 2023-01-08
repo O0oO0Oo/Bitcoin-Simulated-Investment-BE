@@ -11,10 +11,6 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.scheduling.quartz.SchedulerFactoryBean;
 
-import java.time.LocalDateTime;
-import java.time.ZoneId;
-import java.util.Date;
-
 @Configuration
 public class QuartzConfig {
 
@@ -35,7 +31,7 @@ public class QuartzConfig {
                     .withIdentity("everySecondsRequestJsonData","requestGroup")
                     .startNow()
                     .withSchedule(SimpleScheduleBuilder.simpleSchedule()
-                        .withIntervalInSeconds(1)
+                        .withIntervalInMilliseconds(500)
                         .repeatForever())
                     .build();
 

@@ -1,6 +1,6 @@
 package com.cryptocurrency.investment.config;
 
-import com.cryptocurrency.investment.domain.redis.CurrencyPriceRedis;
+import com.cryptocurrency.investment.domain.redis.PriceInfoRedis;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -8,11 +8,14 @@ import org.springframework.data.redis.connection.RedisConnectionFactory;
 import org.springframework.data.redis.connection.lettuce.LettuceConnectionFactory;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.data.redis.repository.configuration.EnableRedisRepositories;
-import org.springframework.data.redis.serializer.StringRedisSerializer;
 
+/**
+ * TODO: Redis의 Expire 설정하기
+ */
 @Configuration
 @EnableRedisRepositories(basePackages = "com.cryptocurrency.investment.repository.redis")
 public class RedisConfig {
+
     @Value("${spring.data.redis.host}")
     private String redisHost;
 
@@ -25,10 +28,9 @@ public class RedisConfig {
     }
 
     @Bean
-    public RedisTemplate<CurrencyPriceRedis  , String> redisTemplate() {
-        RedisTemplate<CurrencyPriceRedis , String> redisTemplate = new RedisTemplate<>();
-        redisTemplate.setConnectionFactory(redisConnectionFactory());
+    public RedisTemplate<String, PriceInfoRedis> redisTemplate(RedisConnectionFactory redisConnectionFactory) {
+        RedisTemplate<String, PriceInfoRedis> redisTemplate = new RedisTemplate<>();
+        redisTemplate.setConnectionFactory(redisConnectionFactory);
         return redisTemplate;
     }
-
 }
