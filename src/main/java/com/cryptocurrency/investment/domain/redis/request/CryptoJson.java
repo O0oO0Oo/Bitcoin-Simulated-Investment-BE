@@ -7,19 +7,19 @@ import lombok.Data;
 import java.util.HashMap;
 
 @Data
-public class CryptocurrencyJson {
+public class CryptoJson {
     @JsonProperty("status")
     private String status;
 
     @JsonProperty("data")
-    private CryptocurrencyJsonInnerInfo cryptocurrencyJsonInnerInfo;
+    private CryptoJsonInner cryptocurrencyJsonInnerInfo;
 
-    private HashMap<String, CryptocurrencyJsonPriceData> fileds = new HashMap<>();
-    public class CryptocurrencyJsonInnerInfo{
+    private HashMap<String, CryptoPriceJson> fileds = new HashMap<>();
+    public class CryptoJsonInner{
         @JsonProperty("date")
         private Long timestamp;
         @JsonAnySetter
-        public void setFiled(String field, CryptocurrencyJsonPriceData value) {
+        public void setFiled(String field, CryptoPriceJson value) {
             fileds.put(field, value);
         }
 
@@ -27,7 +27,7 @@ public class CryptocurrencyJson {
             this.timestamp = timestamp;
         }
         @JsonAnyGetter
-        public HashMap<String, com.cryptocurrency.investment.domain.redis.request.CryptocurrencyJsonPriceData> getFields() {
+        public HashMap<String, CryptoPriceJson> getFields() {
             return fileds;
         }
         public Long getTimestamp() {

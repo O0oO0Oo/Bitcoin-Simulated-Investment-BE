@@ -1,8 +1,8 @@
 package com.cryptocurrency.investment.scheduler.quartz;
 
 import com.cryptocurrency.investment.domain.redis.PriceInfoRedis;
-import com.cryptocurrency.investment.domain.redis.request.CryptocurrencyJson;
-import com.cryptocurrency.investment.domain.redis.request.CryptocurrencyJsonPriceData;
+import com.cryptocurrency.investment.domain.redis.request.CryptoJson;
+import com.cryptocurrency.investment.domain.redis.request.CryptoPriceJson;
 import com.cryptocurrency.investment.repository.redis.PriceInfoRedisRepository;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.quartz.Job;
@@ -31,7 +31,7 @@ public class PeriodicGetJsonDataTask implements Job {
         HttpURLConnection conn;
         InputStream responseBody;
         ObjectMapper mapper = new ObjectMapper();
-        CryptocurrencyJson readValue;
+        CryptoJson readValue;
         try {
             url = new URL("https://api.bithumb.com/public/ticker/ALL");
             conn = (HttpURLConnection) url.openConnection();
@@ -39,16 +39,16 @@ public class PeriodicGetJsonDataTask implements Job {
             conn.setRequestProperty("Content-Type", "application/json");
 
             responseBody = conn.getInputStream();
-            readValue = mapper.readValue(responseBody, CryptocurrencyJson.class);
+            readValue = mapper.readValue(responseBody, CryptoJson.class);
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
 
-        HashMap<String, CryptocurrencyJsonPriceData> fields = readValue.getCryptocurrencyJsonInnerInfo().getFields();
+        HashMap<String, CryptoPriceJson> fields = readValue.getCryptocurrencyJsonInnerInfo().getFields();
         Long localDateTime = readValue.getCryptocurrencyJsonInnerInfo().getTimestamp();
         localDateTime = localDateTime - localDateTime % 1000;
 
-        for (Map.Entry<String, CryptocurrencyJsonPriceData> entry : fields.entrySet()) {
+        for (Map.Entry<String, CryptoPriceJson> entry : fields.entrySet()) {
             PriceInfoRedis priceRedis = new PriceInfoRedis(
                     entry.getKey() + localDateTime,
                     entry.getKey(),
