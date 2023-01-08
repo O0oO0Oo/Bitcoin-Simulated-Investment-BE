@@ -9,6 +9,9 @@ import org.springframework.data.redis.connection.lettuce.LettuceConnectionFactor
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.data.redis.repository.configuration.EnableRedisRepositories;
 
+/**
+ * TODO: Redis의 Expire 설정하기
+ */
 @Configuration
 @EnableRedisRepositories(basePackages = "com.cryptocurrency.investment.repository.redis")
 public class RedisConfig {
