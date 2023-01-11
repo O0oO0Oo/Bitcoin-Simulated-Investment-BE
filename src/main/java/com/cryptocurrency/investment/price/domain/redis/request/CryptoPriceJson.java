@@ -1,4 +1,4 @@
-package com.cryptocurrency.investment.domain.redis.request;
+package com.cryptocurrency.investment.price.domain.redis.request;
 
 import lombok.Data;
 

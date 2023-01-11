@@ -1,6 +1,6 @@
-package com.cryptocurrency.investment.controller;
+package com.cryptocurrency.investment.price.controller;
 
-import com.cryptocurrency.investment.Service.PriceInfoService;
+import com.cryptocurrency.investment.price.Service.PriceInfoService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;

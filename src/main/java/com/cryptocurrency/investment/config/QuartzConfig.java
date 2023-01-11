@@ -1,11 +1,7 @@
 package com.cryptocurrency.investment.config;
 
+import com.cryptocurrency.investment.price.scheduler.quartz.PeriodicGetJsonDataTask;
 import org.quartz.*;
-import com.cryptocurrency.investment.scheduler.quartz.PeriodicGetJsonDataTask;
-import org.quartz.JobBuilder;
-import org.quartz.Scheduler;
-import org.quartz.SchedulerException;
-import org.quartz.Trigger;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;

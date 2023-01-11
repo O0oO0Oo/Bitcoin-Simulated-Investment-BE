@@ -1,7 +1,7 @@
-package com.cryptocurrency.investment.Service;
+package com.cryptocurrency.investment.price.Service;
 
-import com.cryptocurrency.investment.dto.response.PriceInfoDto;
-import com.cryptocurrency.investment.repository.redis.PriceInfoRedisRepository;
+import com.cryptocurrency.investment.price.dto.response.PriceInfoDto;
+import com.cryptocurrency.investment.price.repository.redis.PriceInfoRedisRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;

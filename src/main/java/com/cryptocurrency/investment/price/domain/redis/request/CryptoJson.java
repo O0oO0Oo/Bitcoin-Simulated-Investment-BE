@@ -1,9 +1,10 @@
-package com.cryptocurrency.investment.domain.redis.request;
+package com.cryptocurrency.investment.price.domain.redis.request;
 
 import com.fasterxml.jackson.annotation.JsonAnyGetter;
 import com.fasterxml.jackson.annotation.JsonAnySetter;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Data;
+
 import java.util.HashMap;
 
 @Data

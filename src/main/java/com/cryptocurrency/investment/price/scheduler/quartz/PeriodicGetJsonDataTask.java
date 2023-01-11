@@ -1,14 +1,16 @@
-package com.cryptocurrency.investment.scheduler.quartz;
+package com.cryptocurrency.investment.price.scheduler.quartz;
 
-import com.cryptocurrency.investment.domain.redis.PriceInfoRedis;
-import com.cryptocurrency.investment.domain.redis.request.CryptoJson;
-import com.cryptocurrency.investment.domain.redis.request.CryptoPriceJson;
-import com.cryptocurrency.investment.repository.redis.PriceInfoRedisRepository;
+import com.cryptocurrency.investment.price.domain.redis.PriceInfoRedis;
+import com.cryptocurrency.investment.price.domain.redis.request.CryptoJson;
+import com.cryptocurrency.investment.price.domain.redis.request.CryptoPriceJson;
+import com.cryptocurrency.investment.price.repository.redis.PriceInfoRedisRepository;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.quartz.Job;
 import org.quartz.JobExecutionContext;
 import org.quartz.JobExecutionException;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.redis.core.RedisTemplate;
+
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.HttpURLConnection;
@@ -20,6 +22,9 @@ public class PeriodicGetJsonDataTask implements Job {
 
     @Autowired
     PriceInfoRedisRepository redisRepository;
+
+    @Autowired
+    RedisTemplate<String, PriceInfoRedis> redisTemplate;
 
     /**
      * Todo: 현재는 request 패키지의 Class들에 ObjectMapper를 통해 매핑 후 다시 CurrencyPriceRedis 생성자를 통해 저장하고 있다.
@@ -53,7 +58,8 @@ public class PeriodicGetJsonDataTask implements Job {
                     entry.getKey() + localDateTime,
                     entry.getKey(),
                     localDateTime,
-                    entry.getValue().getClosing_price());
+                    entry.getValue().getClosing_price(),
+                    300);
             redisRepository.save(priceRedis);
         }
     }

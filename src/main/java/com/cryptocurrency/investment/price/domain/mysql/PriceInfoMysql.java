@@ -1,4 +1,4 @@
-package com.cryptocurrency.investment.domain.mysql;
+package com.cryptocurrency.investment.price.domain.mysql;
 
 import jakarta.persistence.*;
 import lombok.Getter;
@@ -13,7 +13,7 @@ import java.time.LocalDateTime;
 @Setter
 @ToString
 @Table(indexes = {
-        @Index(columnList = "currencyName"),
+        @Index(columnList = "name"),
         @Index(columnList = "timestamp")
 })
 @Entity
@@ -24,12 +24,12 @@ public class PriceInfoMysql {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(nullable = false, length = 50)
-    private String currencyName;
+    @Column(nullable = false, length = 20)
+    private String name;
 
     @Column(nullable = false)
     private LocalDateTime timestamp;
 
     @Column(nullable = false)
-    private Double price;
+    private String price;
 }

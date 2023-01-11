@@ -1,6 +1,7 @@
-package com.cryptocurrency.investment.dto.response;
+package com.cryptocurrency.investment.price.dto.response;
 
-import com.cryptocurrency.investment.domain.redis.PriceInfoRedis;
+import com.cryptocurrency.investment.price.domain.redis.PriceInfoRedis;
+
 import java.util.List;
 import java.util.stream.Collectors;
 
