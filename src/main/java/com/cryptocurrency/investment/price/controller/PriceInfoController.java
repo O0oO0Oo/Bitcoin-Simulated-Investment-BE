@@ -22,6 +22,6 @@ public class PriceInfoController {
      */
     @GetMapping("/{name}/1s")
     public ResponseEntity<?> cryptoPriceInfo(@PathVariable String name) {
-        return ResponseEntity.ok(priceInfoService.getCryptoPriceInfo(name));
+        return ResponseEntity.ok(priceInfoService.getPriceInfo(name));
     }
 }

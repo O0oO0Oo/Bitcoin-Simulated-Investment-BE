@@ -15,7 +15,7 @@ public class PriceInfoService {
     @Autowired
     PriceInfoRedisRepository redisRepository;
 
-    public PriceInfoDto getCryptoPriceInfo(String name) {
+    public PriceInfoDto getPriceInfo(String name) {
         return PriceInfoDto.fromRedis(redisRepository.findTop300ByNameOrderByTimestampDesc(name));
     }
 }
