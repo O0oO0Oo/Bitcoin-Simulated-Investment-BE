@@ -1,43 +1,71 @@
 package com.cryptocurrency.investment.user.domain;
 
-import com.cryptocurrency.investment.user.validation.SaveCheck;
-import com.cryptocurrency.investment.user.validation.UpdateCheck;
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.Id;
-import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.NotEmpty;
-import jakarta.validation.constraints.NotNull;
+import jakarta.persistence.*;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 import lombok.ToString;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.userdetails.UserDetails;
 
 import java.time.LocalDateTime;
+import java.util.Collection;
+import java.util.Collections;
 
 @Data
 @ToString
 @Entity
-public class UserAccount {
+@NoArgsConstructor
+public class UserAccount implements UserDetails {
     @Id
-    @Column(length = 50)
-    private String userId;
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
 
-    @NotNull(groups = {SaveCheck.class})
-    @NotBlank(groups = {UpdateCheck.class})
-    private String userPassword;
+    @Column(unique = true)
+    private String username;
 
-    @NotNull
-    @NotEmpty
-    @NotBlank
-    private String nickName;
+    private String password;
 
-
-    @NotNull
-    @NotEmpty
-    @NotBlank
+    @Column(unique = true)
     private String email;
 
+    private Role role;
 
     private LocalDateTime joinDate;
 
-    private Role role;
+    public UserAccount(String username, String email, String password, Role role, LocalDateTime now) {
+        this.username = username;
+        this.email = email;
+        this.password = password;
+        this.role = role;
+        joinDate = now;
+    }
+
+    @Override
+    public Collection<? extends GrantedAuthority> getAuthorities() {
+        return Collections.singleton((GrantedAuthority) () -> String.valueOf(role));
+    }
+
+    public Boolean isAdmin() {
+        return role.equals(Role.ADMIN);
+    }
+
+    @Override
+    public boolean isAccountNonExpired() {
+        return true;
+    }
+
+    @Override
+    public boolean isAccountNonLocked() {
+        return true;
+    }
+
+    @Override
+    public boolean isCredentialsNonExpired() {
+        return true;
+    }
+
+    @Override
+    public boolean isEnabled() {
+        return true;
+    }
 }
