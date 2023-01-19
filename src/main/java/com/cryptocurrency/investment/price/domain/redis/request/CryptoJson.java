@@ -15,13 +15,13 @@ public class CryptoJson {
     @JsonProperty("data")
     private CryptoJsonInner cryptocurrencyJsonInnerInfo;
 
-    private HashMap<String, CryptoPriceJson> fileds = new HashMap<>();
+    private HashMap<String, CryptoPriceJson> fields = new HashMap<>();
     public class CryptoJsonInner{
         @JsonProperty("date")
         private Long timestamp;
         @JsonAnySetter
         public void setFiled(String field, CryptoPriceJson value) {
-            fileds.put(field, value);
+            fields.put(field, value);
         }
 
         public void setTimestamp(Long timestamp) {
@@ -29,7 +29,7 @@ public class CryptoJson {
         }
         @JsonAnyGetter
         public HashMap<String, CryptoPriceJson> getFields() {
-            return fileds;
+            return fields;
         }
         public Long getTimestamp() {
             return timestamp;
