@@ -1,10 +1,9 @@
 # Jpa
 spring.jpa:
   hibernate:
-    ddl-auto: create
+    ddl-auto: update
   show-sql: true
   open-in-view: true
-
   properties:
     hibernate.format_sql: true
 
@@ -13,8 +12,6 @@ spring.data:
     redis:
       host: localhost
       port: 6379
-
-
 
 # Mysql
 spring.datasource:
@@ -33,3 +30,7 @@ spring.quartz:
     job-store-type: jdbc
     jdbc.initialize-schema: always
 
+# Security
+
+jwt:
+  secret: abcdefghijklmnOPQRSTUVWXYZ
