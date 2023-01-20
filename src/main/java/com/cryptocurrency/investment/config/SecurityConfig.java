@@ -1,7 +1,7 @@
-package com.cryptocurrency.investment.security.config;
+package com.cryptocurrency.investment.config;
 
-import com.cryptocurrency.investment.security.jwt.JwtAuthenticationFilter;
-import com.cryptocurrency.investment.security.service.AuthenticationUserDetailsService;
+import com.cryptocurrency.investment.auth.jwt.JwtAuthenticationFilter;
+import com.cryptocurrency.investment.auth.service.AuthenticationUserDetailsService;
 import com.cryptocurrency.investment.user.domain.Role;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
@@ -92,7 +92,7 @@ public class SecurityConfig{
          */
         http.cors().and().csrf().disable();
         http.authorizeHttpRequests((requests) -> requests
-                        .requestMatchers(HttpMethod.GET, "/api/crypto/*/*").permitAll()
+                        .requestMatchers(HttpMethod.GET, "/api/price/**").permitAll()
                         .requestMatchers(HttpMethod.POST, "/user", "/user/login").permitAll()
                         .requestMatchers("/admin/*").hasRole(Role.ADMIN.toString())
                         .anyRequest().authenticated()

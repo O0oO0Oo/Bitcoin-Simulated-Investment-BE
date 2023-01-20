@@ -1,7 +1,7 @@
-package com.cryptocurrency.investment.security.controller;
+package com.cryptocurrency.investment.auth.controller;
 
-import com.cryptocurrency.investment.security.dto.AuthRequest;
-import com.cryptocurrency.investment.security.service.AuthService;
+import com.cryptocurrency.investment.auth.dto.AuthRequest;
+import com.cryptocurrency.investment.auth.service.AuthService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;

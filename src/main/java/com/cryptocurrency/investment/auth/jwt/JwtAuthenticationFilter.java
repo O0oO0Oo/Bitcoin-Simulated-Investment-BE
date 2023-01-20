@@ -1,4 +1,4 @@
-package com.cryptocurrency.investment.security.jwt;
+package com.cryptocurrency.investment.auth.jwt;
 
 import com.cryptocurrency.investment.user.domain.UserAccount;
 import jakarta.servlet.FilterChain;

@@ -1,7 +1,7 @@
-package com.cryptocurrency.investment.security.service;
+package com.cryptocurrency.investment.auth.service;
 
-import com.cryptocurrency.investment.security.dto.AuthResponse;
-import com.cryptocurrency.investment.security.jwt.JwtUtils;
+import com.cryptocurrency.investment.auth.dto.AuthResponse;
+import com.cryptocurrency.investment.auth.jwt.JwtUtils;
 import com.cryptocurrency.investment.user.domain.UserAccount;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
