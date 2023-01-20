@@ -10,7 +10,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 @RequiredArgsConstructor
-@RequestMapping("/api/crypto")
+@RequestMapping("/api/price")
 @RestController
 public class PriceInfoController {
 
@@ -21,7 +21,14 @@ public class PriceInfoController {
      * TODO: Paging 으로 최적화 하기
      */
     @GetMapping("/{name}/1s")
-    public ResponseEntity<?> cryptoPriceInfo(@PathVariable String name) {
-        return ResponseEntity.ok(priceInfoService.getPriceInfo(name));
+    public ResponseEntity<?> priceInfoRedisMapping(@PathVariable String name) {
+        return ResponseEntity.ok(priceInfoService.getPriceInfoRedis(name));
+    }
+
+    @GetMapping("/{name}/{interval}/{unit}")
+    public ResponseEntity<?> priceInfoMysqlMapping(@PathVariable String name,
+                                             @PathVariable Long interval,
+                                             @PathVariable String unit) {
+        return ResponseEntity.ok(priceInfoService.getPriceInfoMysql(name,interval,unit));
     }
 }
