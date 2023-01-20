@@ -1,30 +1,30 @@
 package com.cryptocurrency.investment.price.scheduler.quartz;
 
 import com.cryptocurrency.investment.price.domain.redis.PriceInfoRedis;
-import com.cryptocurrency.investment.price.domain.redis.request.CryptoJson;
-import com.cryptocurrency.investment.price.domain.redis.request.CryptoPriceJson;
+import com.cryptocurrency.investment.price.dto.request.RequestPriceInfoDto;
+import com.cryptocurrency.investment.price.dto.scheduler.PricePerMinuteDataDto;
+import com.cryptocurrency.investment.price.dto.scheduler.PricePerMinuteDto;
 import com.cryptocurrency.investment.price.repository.redis.PriceInfoRedisRepository;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.quartz.Job;
 import org.quartz.JobExecutionContext;
 import org.quartz.JobExecutionException;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.redis.core.RedisTemplate;
+import org.springframework.stereotype.Component;
 
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.HttpURLConnection;
 import java.net.URL;
-import java.util.HashMap;
-import java.util.Map;
 
-public class PeriodicGetJsonDataTask implements Job {
-
-    @Autowired
-    PriceInfoRedisRepository redisRepository;
+@Component
+public class EverySecondRequestJsonJob implements Job {
 
     @Autowired
-    RedisTemplate<String, PriceInfoRedis> redisTemplate;
+    private PriceInfoRedisRepository redisRepository;
+
+    @Autowired
+    private PricePerMinuteDto pricePerMinuteDto;
 
     /**
      * Todo: 현재는 request 패키지의 Class들에 ObjectMapper를 통해 매핑 후 다시 CurrencyPriceRedis 생성자를 통해 저장하고 있다.
@@ -36,7 +36,7 @@ public class PeriodicGetJsonDataTask implements Job {
         HttpURLConnection conn;
         InputStream responseBody;
         ObjectMapper mapper = new ObjectMapper();
-        CryptoJson readValue;
+        RequestPriceInfoDto readValue;
         try {
             url = new URL("https://api.bithumb.com/public/ticker/ALL");
             conn = (HttpURLConnection) url.openConnection();
@@ -44,23 +44,33 @@ public class PeriodicGetJsonDataTask implements Job {
             conn.setRequestProperty("Content-Type", "application/json");
 
             responseBody = conn.getInputStream();
-            readValue = mapper.readValue(responseBody, CryptoJson.class);
+            readValue = mapper.readValue(responseBody, RequestPriceInfoDto.class);
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
 
-        HashMap<String, CryptoPriceJson> fields = readValue.getCryptocurrencyJsonInnerInfo().getFields();
-        Long localDateTime = readValue.getCryptocurrencyJsonInnerInfo().getTimestamp();
-        localDateTime = localDateTime - localDateTime % 1000;
+        Long localDateTime = readValue.getInnerData().getTimestamp();
+        Long finalLocalDateTime = localDateTime - localDateTime % 1000;
 
-        for (Map.Entry<String, CryptoPriceJson> entry : fields.entrySet()) {
-            PriceInfoRedis priceRedis = new PriceInfoRedis(
-                    entry.getKey() + localDateTime,
-                    entry.getKey(),
-                    localDateTime,
-                    entry.getValue().getClosing_price(),
-                    300);
-            redisRepository.save(priceRedis);
-        }
+        readValue.getFields().forEach((k, v) -> {
+            if (!pricePerMinuteDto.getPriceHashMap().containsKey(k)) {
+                pricePerMinuteDto.getPriceHashMap().put(
+                        k,
+                        new PricePerMinuteDataDto(
+                                v.getClosing_price()
+                        )
+                );
+            } else {
+                pricePerMinuteDto.getPriceHashMap().get(k)
+                        .setPrice(v.getClosing_price());
+            }
+
+            redisRepository.save(new PriceInfoRedis(
+                    k + finalLocalDateTime,
+                    k,
+                    finalLocalDateTime,
+                    v.getClosing_price(),
+                    3600));
+        });
     }
 }

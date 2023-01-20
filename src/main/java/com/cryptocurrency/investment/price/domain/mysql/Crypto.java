@@ -1,11 +1,9 @@
 package com.cryptocurrency.investment.price.domain.mysql;
 
 import jakarta.persistence.*;
-import lombok.Getter;
-import lombok.Setter;
+import lombok.Data;
 
-@Getter
-@Setter
+@Data
 @Table(indexes = {
         @Index(columnList = "name")
 })

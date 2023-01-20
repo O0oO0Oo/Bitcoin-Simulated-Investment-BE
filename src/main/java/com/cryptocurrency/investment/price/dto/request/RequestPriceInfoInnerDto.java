@@ -1,4 +1,4 @@
-package com.cryptocurrency.investment.price.domain.redis.request;
+package com.cryptocurrency.investment.price.dto.request;
 
 import lombok.Data;
 
@@ -8,7 +8,7 @@ import lombok.Data;
  * TODO: 사용하지 않는 데이터 저장 안하도록 개선
  */
 @Data
-public class CryptoPriceJson {
+public class RequestPriceInfoInnerDto {
     private String opening_price;
     private String closing_price;
     private String min_price;

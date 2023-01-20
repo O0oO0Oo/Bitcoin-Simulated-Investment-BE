@@ -1,4 +1,4 @@
-package com.cryptocurrency.investment.security.dto;
+package com.cryptocurrency.investment.auth.dto;
 
 import jakarta.validation.constraints.Email;
 import lombok.Data;

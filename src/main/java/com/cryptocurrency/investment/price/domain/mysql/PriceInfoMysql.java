@@ -1,20 +1,13 @@
 package com.cryptocurrency.investment.price.domain.mysql;
 
 import jakarta.persistence.*;
-import lombok.Getter;
+import lombok.Data;
 import lombok.NoArgsConstructor;
-import lombok.Setter;
-import lombok.ToString;
-
-import java.time.LocalDateTime;
 
 
-@Getter
-@Setter
-@ToString
+@Data
 @Table(indexes = {
-        @Index(columnList = "name"),
-        @Index(columnList = "timestamp")
+        @Index(columnList = "name, timestamp")
 })
 @Entity
 @NoArgsConstructor
@@ -28,8 +21,20 @@ public class PriceInfoMysql {
     private String name;
 
     @Column(nullable = false)
-    private LocalDateTime timestamp;
+    private Long timestamp;
 
     @Column(nullable = false)
     private String price;
+
+    private String maxPrice;
+
+    private String minPrice;
+
+    public PriceInfoMysql(String name, Long timestamp, String curPrice, String maxPrice, String minPrice) {
+        this.name = name;
+        this.timestamp = timestamp;
+        this.price = curPrice;
+        this.maxPrice = maxPrice;
+        this.minPrice = minPrice;
+    }
 }

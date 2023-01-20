@@ -2,7 +2,6 @@ package com.cryptocurrency.investment.config;
 
 import com.cryptocurrency.investment.price.domain.redis.PriceInfoRedis;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.cache.annotation.EnableCaching;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.data.redis.connection.RedisConnectionFactory;
@@ -19,8 +18,7 @@ import org.springframework.data.redis.serializer.StringRedisSerializer;
 @EnableRedisRepositories(basePackages = "com.cryptocurrency.investment.price.repository.redis",
         enableKeyspaceEvents = RedisKeyValueAdapter.EnableKeyspaceEvents.ON_DEMAND,
         shadowCopy = RedisKeyValueAdapter.ShadowCopy.OFF)
-@EnableCaching
-public class RedisPriceConfig {
+public class RedisConfig {
 
     @Value("${spring.data.redis.host}")
     private String redisHost;

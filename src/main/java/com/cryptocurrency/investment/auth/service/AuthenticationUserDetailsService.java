@@ -1,4 +1,4 @@
-package com.cryptocurrency.investment.security.service;
+package com.cryptocurrency.investment.auth.service;
 
 import com.cryptocurrency.investment.user.domain.UserAccount;
 import com.cryptocurrency.investment.user.repository.UserRepository;
