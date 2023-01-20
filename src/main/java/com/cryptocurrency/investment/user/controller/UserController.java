@@ -19,12 +19,12 @@ public class UserController {
 
 
     /**
-     * @param userJoinDto Request 유저 Dto
+     * @param userSignUpDto Request 유저 Dto
      * @return 성공시 가입시 기입한 username 반환
      */
     @PostMapping
-    public @ResponseBody String join(@RequestBody @Validated UserSignUpDto userJoinDto) {
-        return userService.userSave(userJoinDto.username(), userJoinDto.email(),userJoinDto.password());
+    public @ResponseBody String signUp(@RequestBody @Validated UserSignUpDto userSignUpDto) {
+        return userService.userSave(userSignUpDto.username(), userSignUpDto.email(),userSignUpDto.password());
     }
 
     @GetMapping("/attendance")
