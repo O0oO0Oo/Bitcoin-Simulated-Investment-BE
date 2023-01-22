@@ -70,7 +70,7 @@ public class EverySecondRequestJsonJob implements Job {
                     k,
                     finalLocalDateTime,
                     v.getClosing_price(),
-                    3600));
+                    600));
         });
     }
 }
