@@ -15,7 +15,7 @@ spring.data:
 
 # Mysql
 spring.datasource:
-  url: jdbc:mysql://localhost:3306/cryptocurrency_simulated_investment
+  url: jdbc:mysql://localhost:3306/prin_coin
   username: csiuser
   password: dptmzbdpfrhdqn3#
   driver-class-name: com.mysql.cj.jdbc.Driver
