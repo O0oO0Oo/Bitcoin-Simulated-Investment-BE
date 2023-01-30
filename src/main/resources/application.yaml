@@ -15,8 +15,8 @@ spring.data:
 
 # Mysql
 spring.datasource:
-  url: jdbc:mysql://localhost:3306/prin_coin
-  username: csiuser
+  url: jdbc:mysql://localhost:3306/princoin
+  username: coinuser
   password: dptmzbdpfrhdqn3#
   driver-class-name: com.mysql.cj.jdbc.Driver
 
@@ -33,6 +33,19 @@ spring.quartz:
       org.quartz.threadPool.threadNamePrefix: quartz-worker
 
 # Security
-
 jwt:
   secret: abcdefghijklmnOPQRSTUVWXYZ
+
+spring:
+  mail:
+    host: smtp.gmail.com
+    username: princoin000@gmail.com
+    password: sdrkwzyhyvyewjam
+    properties:
+      mail:
+        transport.protocol: smtp
+        smtp:
+          auth: true
+          starttls:
+            enable: true
+            required: true

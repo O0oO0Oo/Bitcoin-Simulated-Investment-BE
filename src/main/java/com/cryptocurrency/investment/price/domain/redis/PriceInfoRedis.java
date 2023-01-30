@@ -30,5 +30,3 @@ public class PriceInfoRedis implements Serializable{
     private int expiration;
 }
 
-
-
