@@ -22,8 +22,8 @@ public class InitializationDefaultConfig {
     @Bean
     public void initializeAccount(){
         if(!userRepository.existsByEmail("Admin@princoin.com")) {
-            userRepository.save(new UserAccount("Admin", "Admin@princoin.com", passwordEncoder.encode("Admin1234!"), Role.ADMIN, LocalDateTime.now()));
-            userRepository.save(new UserAccount("test", "test@test.com", passwordEncoder.encode("test"), Role.USER, LocalDateTime.now()));
+            userRepository.save(new UserAccount("Admin", "Admin@princoin.com", passwordEncoder.encode("Admin1234!"), Role.ADMIN));
+            userRepository.save(new UserAccount("test", "test@test.com", passwordEncoder.encode("test"), Role.USER));
         }
     }
 
