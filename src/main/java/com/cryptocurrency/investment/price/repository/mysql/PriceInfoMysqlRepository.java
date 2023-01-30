@@ -8,7 +8,6 @@ import org.springframework.data.repository.query.Param;
 import java.util.List;
 
 public interface PriceInfoMysqlRepository extends JpaRepository<PriceInfoMysql, String> {
-
     @Query(value = "SELECT * " +
             "FROM price_info_mysql as p " +
             "WHERE p.name = :name and " +

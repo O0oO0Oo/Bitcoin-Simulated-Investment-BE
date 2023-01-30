@@ -8,6 +8,9 @@ import org.quartz.JobExecutionContext;
 import org.quartz.JobExecutionException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
+import org.springframework.util.StopWatch;
+
+import java.util.stream.Collectors;
 
 @Component
 public class EveryMinuteSaveJsonJob implements Job {
@@ -20,16 +23,16 @@ public class EveryMinuteSaveJsonJob implements Job {
 
     @Override
     public void execute(JobExecutionContext context) throws JobExecutionException {
-        pricePerMinuteDto.getPriceHashMap().forEach((k,v) -> {
-            mysqlRepository.save(
-                    new PriceInfoMysql(
-                            k,
-                            context.getFireTime().getTime() - context.getFireTime().getTime() % 1000,
-                            v.getCurPrice(),
-                            v.getMaxPrice(),
-                            v.getMinPrice()
-                    )
-            );
-        });
+        mysqlRepository.saveAll(pricePerMinuteDto.getPriceHashMap().entrySet().stream()
+                .map(entry -> new PriceInfoMysql(
+                                entry.getKey(),
+                                context.getFireTime().getTime() - context.getFireTime().getTime() % 1000,
+                                entry.getValue().getCurPrice(),
+                                entry.getValue().getMaxPrice(),
+                                entry.getValue().getMinPrice()
+                        )
+                )
+                .collect(Collectors.toList())
+        );
     }
 }

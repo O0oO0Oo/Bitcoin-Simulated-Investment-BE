@@ -2,7 +2,7 @@
 spring.jpa:
   hibernate:
     ddl-auto: create
-#  show-sql: true
+  show-sql: true
   open-in-view: true
   properties:
     hibernate.format_sql: true
@@ -30,7 +30,7 @@ spring.quartz:
     job-store-type: jdbc
     jdbc.initialize-schema: always
     properties:
-      org.quartz.threadPool.threadNamePrefix: quartz-woker
+      org.quartz.threadPool.threadNamePrefix: quartz-worker
 
 # Security
 

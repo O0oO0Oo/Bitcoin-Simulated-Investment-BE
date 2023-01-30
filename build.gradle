@@ -7,6 +7,8 @@ plugins {
 group = 'com.cryptocurrency'
 version = '0.0.1-SNAPSHOT'
 sourceCompatibility = '17'
+targetCompatibility = '17'
+
 
 configurations {
 	compileOnly {
@@ -45,6 +47,9 @@ dependencies {
 
 	// java.lang.NoClassDefFoundError: javax/xml/bind/DatatypeConverter
 	implementation 'javax.xml.bind:jaxb-api:2.4.0-b180830.0359'
+
+	// Email
+	implementation 'org.springframework.boot:spring-boot-starter-mail'
 }
 
 tasks.named('test') {

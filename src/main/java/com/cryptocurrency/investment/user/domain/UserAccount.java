@@ -3,21 +3,20 @@ package com.cryptocurrency.investment.user.domain;
 import jakarta.persistence.*;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import lombok.ToString;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.util.Collection;
-import java.util.Collections;
+import java.util.*;
 
 @Data
-@ToString
 @Entity
 @NoArgsConstructor
 public class UserAccount implements UserDetails {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "USER_ID")
     private Long id;
 
     @Column(unique = true)
@@ -30,14 +29,19 @@ public class UserAccount implements UserDetails {
 
     private Role role;
 
-    private LocalDateTime joinDate;
+    private LocalDate joinDate;
 
-    public UserAccount(String username, String email, String password, Role role, LocalDateTime now) {
+    @Column(length = 500)
+    private HashSet<LocalDate> attendance;
+
+    public UserAccount(String username, String email, String password, Role role) {
         this.username = username;
         this.email = email;
         this.password = password;
         this.role = role;
-        joinDate = now;
+        this.attendance = new HashSet<>();
+        this.attendance.add(LocalDate.of(2020,10,10));
+        this.joinDate = LocalDate.now();
     }
 
     @Override
