@@ -24,15 +24,9 @@ public class UserService {
 
     private final UserRepository userRepository;
 
-    private final PasswordEncoder passwordEncoder;
-
     public Optional<UserAccount> userInfo(String token) {
         String email = jwtUtils.getSubject(token);
         return userRepository.findByEmail(email);
-    }
-    public String userSave(String username, String email, String password) {
-        return userRepository.save(
-                new UserAccount(username, email, passwordEncoder.encode(password), Role.USER)).getUsername();
     }
 
     public HashSet<LocalDate> getUserAttendance(String token){
@@ -46,13 +40,5 @@ public class UserService {
         userAccount.getAttendance().add(LocalDate.now());
         userRepository.save(userAccount);
         return userAccount.getAttendance();
-    }
-
-    public boolean isExistUsername(String username) {
-        return userRepository.existsByUsername(username);
-    }
-
-    public boolean isExistEmail(String email) {
-        return userRepository.existsByEmail(email);
     }
 }
