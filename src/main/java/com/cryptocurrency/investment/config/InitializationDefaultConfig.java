@@ -9,7 +9,6 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
-import java.time.LocalDateTime;
 import java.util.HashMap;
 
 @Configuration
@@ -21,9 +20,9 @@ public class InitializationDefaultConfig {
 
     @Bean
     public void initializeAccount(){
-        if(!userRepository.existsByEmail("Admin@princoin.com")) {
-            userRepository.save(new UserAccount("Admin", "Admin@princoin.com", passwordEncoder.encode("Admin1234!"), Role.ADMIN));
-            userRepository.save(new UserAccount("test", "test@test.com", passwordEncoder.encode("test"), Role.USER));
+        if(!userRepository.existsByEmail("Admin@frincoin.com")) {
+            userRepository.save(new UserAccount("Admin@frincoin.com", "Admin", passwordEncoder.encode("Admin1234!"), Role.ADMIN));
+            userRepository.save(new UserAccount("test@test.com","test", passwordEncoder.encode("test"), Role.USER));
         }
     }
 

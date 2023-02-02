@@ -3,9 +3,9 @@ package com.cryptocurrency.investment.user.domain;
 import jakarta.persistence.*;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import org.springframework.data.redis.core.TimeToLive;
 
-import java.util.concurrent.TimeUnit;
+import java.time.LocalDateTime;
+import java.time.temporal.ChronoUnit;
 
 @Data
 @Entity
@@ -20,12 +20,11 @@ public class EmailValidation {
 
     private String validation;
 
-    @TimeToLive(unit = TimeUnit.SECONDS)
-    private int expiration;
+    private LocalDateTime timestamp;
 
     public EmailValidation(String email, String validation) {
         this.email = email;
         this.validation = validation;
-        this.expiration = 60;
+        this.timestamp = LocalDateTime.now().truncatedTo(ChronoUnit.SECONDS);
     }
 }

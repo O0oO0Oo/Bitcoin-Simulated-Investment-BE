@@ -1,16 +1,13 @@
 package com.cryptocurrency.investment.user.service;
 
 import com.cryptocurrency.investment.auth.jwt.JwtUtils;
-import com.cryptocurrency.investment.user.domain.Role;
 import com.cryptocurrency.investment.user.domain.UserAccount;
+import com.cryptocurrency.investment.user.dto.request.UserModifyDto;
 import com.cryptocurrency.investment.user.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
-import java.time.LocalDate;
-import java.util.HashSet;
 import java.util.Optional;
 
 @Service
@@ -24,21 +21,22 @@ public class UserService {
 
     private final UserRepository userRepository;
 
-    public Optional<UserAccount> userInfo(String token) {
+    public Optional<UserAccount> getUserInfo(String token) {
         String email = jwtUtils.getSubject(token);
         return userRepository.findByEmail(email);
     }
 
-    public HashSet<LocalDate> getUserAttendance(String token){
+    public int modifyUserInfo(String token, UserModifyDto modifyDto) {
         String email = jwtUtils.getSubject(token);
-        return userRepository.findByEmail(email).get().getAttendance();
+        return userRepository.updateUser(email, modifyDto.username(), modifyDto.password());
     }
 
-    public HashSet<LocalDate> userAttendance(String token){
+    public int deleteUserInfo(String token) {
         String email = jwtUtils.getSubject(token);
-        UserAccount userAccount = userRepository.findByEmail(email).get();
-        userAccount.getAttendance().add(LocalDate.now());
-        userRepository.save(userAccount);
-        return userAccount.getAttendance();
+        return userRepository.deleteByEmail(email);
+    }
+
+    public boolean isExistUsername(UserModifyDto modifyDto) {
+        return userRepository.existsByUsername(modifyDto.username());
     }
 }
