@@ -1,4 +1,4 @@
-package com.cryptocurrency.investment.price.domain.mysql;
+package com.cryptocurrency.investment.crypto.domain;
 
 import jakarta.persistence.*;
 import lombok.Data;
