@@ -49,7 +49,6 @@ public class SecurityConfig{
 
 
         authenticationProvider.setUserDetailsService(authenticationUserDetailsService);
-
         /**
          * Set Password Encoder
          */
@@ -94,8 +93,8 @@ public class SecurityConfig{
         http.authorizeHttpRequests((requests) -> requests
                         .requestMatchers(HttpMethod.GET, "/api/price/**").permitAll()
                         .requestMatchers(HttpMethod.POST, "/user", "/user/login").permitAll()
-                        .requestMatchers(HttpMethod.GET, "/user/email", "/user/username").permitAll()
-                        .requestMatchers("/admin/*").hasRole(Role.ADMIN.toString())
+                        .requestMatchers("/user/email", "/user/username").permitAll()
+                        .requestMatchers("/admin/**").hasRole(Role.ADMIN.toString())
                         .anyRequest().authenticated()
                 )
                 .logout(LogoutConfigurer::permitAll);

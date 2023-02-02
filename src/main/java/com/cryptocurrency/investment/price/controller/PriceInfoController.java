@@ -1,9 +1,10 @@
 package com.cryptocurrency.investment.price.controller;
 
+import com.cryptocurrency.investment.config.response.ResponseWrapperDto;
+import com.cryptocurrency.investment.config.response.ResponseStatus;
 import com.cryptocurrency.investment.price.Service.PriceInfoService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -21,14 +22,22 @@ public class PriceInfoController {
      * TODO: Paging 으로 최적화 하기
      */
     @GetMapping("/{name}/1s")
-    public ResponseEntity<?> priceInfoRedisMapping(@PathVariable String name) {
-        return ResponseEntity.ok(priceInfoService.getPriceInfoRedis(name));
+    public ResponseWrapperDto priceInfoRedisMapping(@PathVariable String name) {
+        try {
+            return ResponseWrapperDto.of(ResponseStatus.PRICE_REQUEST_SUCCEED, priceInfoService.getPriceInfoRedis(name));
+        } catch (Exception e) {
+            return ResponseWrapperDto.of(ResponseStatus.PRICE_REQUEST_FAILED);
+        }
     }
 
     @GetMapping("/{name}/{interval}/{unit}")
-    public ResponseEntity<?> priceInfoMysqlMapping(@PathVariable String name,
-                                             @PathVariable Long interval,
-                                             @PathVariable String unit) {
-        return ResponseEntity.ok(priceInfoService.getPriceInfoMysql(name,interval,unit));
+    public ResponseWrapperDto priceInfoMysqlMapping(@PathVariable String name,
+                                                    @PathVariable Long interval,
+                                                    @PathVariable String unit) {
+        try {
+            return ResponseWrapperDto.of(ResponseStatus.PRICE_REQUEST_SUCCEED, priceInfoService.getPriceInfoMysql(name, interval, unit));
+        } catch (Exception e) {
+            return ResponseWrapperDto.of(ResponseStatus.PRICE_REQUEST_FAILED);
+        }
     }
 }
