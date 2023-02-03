@@ -2,7 +2,7 @@ package com.cryptocurrency.investment.user.service;
 
 import com.cryptocurrency.investment.user.domain.EmailValidation;
 import com.cryptocurrency.investment.user.dto.request.UserEmailDto;
-import com.cryptocurrency.investment.user.dto.request.UserJoinDto;
+import com.cryptocurrency.investment.user.dto.request.UserAccountDto;
 import com.cryptocurrency.investment.user.repository.EmailValidationRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -47,7 +47,7 @@ public class EmailValidationService {
         return validationRepository.findByEmailSent(emailDto.email(), RESEND);
     }
 
-    public Integer isValidationSent(UserJoinDto joinDto) {
+    public Integer isValidationSent(UserAccountDto joinDto) {
         return validationRepository.findByEmailSent(joinDto.email(), EXPIRE);
     }
 
@@ -55,7 +55,7 @@ public class EmailValidationService {
      * 메일, 인증번호를 검증
      * @param joinDto
      */
-    public boolean isCorrectValidation(UserJoinDto joinDto) {
+    public boolean isCorrectValidation(UserAccountDto joinDto) {
         return validationRepository.existsByEmailAndValidation(joinDto.email(), joinDto.validation());
     }
 

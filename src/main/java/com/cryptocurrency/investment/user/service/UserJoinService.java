@@ -3,7 +3,7 @@ package com.cryptocurrency.investment.user.service;
 import com.cryptocurrency.investment.user.domain.Role;
 import com.cryptocurrency.investment.user.domain.UserAccount;
 import com.cryptocurrency.investment.user.dto.request.UserEmailDto;
-import com.cryptocurrency.investment.user.dto.request.UserJoinDto;
+import com.cryptocurrency.investment.user.dto.request.UserAccountDto;
 import com.cryptocurrency.investment.user.dto.request.UsernameDto;
 import com.cryptocurrency.investment.user.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
@@ -17,7 +17,7 @@ public class UserJoinService {
 
     private final PasswordEncoder passwordEncoder;
 
-    public String userSave(UserJoinDto joinDto) {
+    public String userSave(UserAccountDto joinDto) {
         return userRepository.save(
                         new UserAccount(
                                 joinDto.email(),
@@ -37,7 +37,7 @@ public class UserJoinService {
         return userRepository.existsByUsername(usernameDto.username());
     }
 
-    public boolean isExistUsername(UserJoinDto userJoinDto) {
-        return userRepository.existsByUsername(userJoinDto.username());
+    public boolean isExistUsername(UserAccountDto userAccountDto) {
+        return userRepository.existsByUsername(userAccountDto.username());
     }
 }

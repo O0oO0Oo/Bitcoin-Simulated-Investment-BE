@@ -3,7 +3,7 @@ package com.cryptocurrency.investment.user.controller;
 import com.cryptocurrency.investment.config.response.ResponseStatus;
 import com.cryptocurrency.investment.config.response.ResponseWrapperDto;
 import com.cryptocurrency.investment.user.dto.request.UserEmailDto;
-import com.cryptocurrency.investment.user.dto.request.UserJoinDto;
+import com.cryptocurrency.investment.user.dto.request.UserAccountDto;
 import com.cryptocurrency.investment.user.dto.request.UsernameDto;
 import com.cryptocurrency.investment.user.service.EmailValidationService;
 import com.cryptocurrency.investment.user.service.UserJoinService;
@@ -91,7 +91,7 @@ public class UserJoinController {
      * 바인딩 에러 -> 인증코드 확인(이메일. 인증코드) -> 오래된 인증코드인지 확인 -> 등록된 이름인지
      */
     @PostMapping
-    public @ResponseBody ResponseWrapperDto join(@RequestBody @Valid UserJoinDto joinDto, BindingResult bindingResult) {
+    public @ResponseBody ResponseWrapperDto join(@RequestBody @Valid UserAccountDto joinDto, BindingResult bindingResult) {
         if (bindingResult.hasErrors()) {
             return ResponseWrapperDto.of(fieldError(bindingResult), ResponseStatus.INVALID_FORMAT);
         }

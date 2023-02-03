@@ -60,6 +60,10 @@ regex:
   password: ^(?=.*[a-z].*)(?=.*[A-Z].*)(?=.*[0-9].*)(?=.*[!@#$%^&*].*).{8,}$
   username: ^[가-힣a-zA-Z]{6,20}$
 
+crypto:
+  redis:
+    time: 600
+
 # mail
 mail:
   validation:
