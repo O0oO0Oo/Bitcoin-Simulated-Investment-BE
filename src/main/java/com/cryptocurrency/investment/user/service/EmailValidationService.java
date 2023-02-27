@@ -33,7 +33,7 @@ public class EmailValidationService {
         SimpleMailMessage message = new SimpleMailMessage();
         message.setTo(emailDto.email());
         message.setSubject("Hello!");
-        message.setText("Validation Code : " + randomInt.toString());
+        message.setText("Validation Code : " + randomInt);
         mailSender.send(message);
         return randomInt.toString();
     }

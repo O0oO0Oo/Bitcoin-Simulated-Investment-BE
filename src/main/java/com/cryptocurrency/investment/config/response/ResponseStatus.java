@@ -5,17 +5,17 @@ import lombok.Getter;
 @Getter
 public enum ResponseStatus {
     /**
-     * User Api
+     * User
      */
 
     // common 공통 에러 처리
     INVALID_FORMAT(2000,"Invalid %s format."), // Email, [a-zA-Z0-9가-힣]
-    INVALID_JWT(2001,"Invalid json web token."),
+    INVALID_PERMISSION(2001,"You don't have permission. %s"),
 
     // POST login 로그인
     USER_LOGIN_SUCCEED(1000,"Login succeed."),
     USER_LOGIN_FAILED(2100,"Login failed, please check your email and password."),
-
+    
     // POST join 회원가입
     USER_JOIN_SUCCEED(1000,"Join succeed. Welcome %s!"),
     // email, username already registered
@@ -51,19 +51,43 @@ public enum ResponseStatus {
 
     // POST attendance 출석하기
     USER_ATTENDANCE_SUCCEED(1000,"Attendance succeed."),
-    USER_ATTENDANCE_INITIALIZED(2100,"Attendance is being initialized."),
+    USER_ATTENDANCE_FAILED(2100,"Attendance failed."),
+    USER_ATTENDANCE_ALREADY_DONE(2101,"Attendance already done."),
+
 
     // GET attendance 유저 출석 목록 불러오기
-    USER_ATTENDANCE_LIST_SUCCEED(1000,"Attendance succeed."),
-    USER_ATTENDANCE_LIST_INITIALIZED(2100,"Attendance is being initialized."),
+    USER_ATTENDANCE_LIST_SUCCEED(1000,"Attendance list request succeeded."),
+    USER_ATTENDANCE_LIST_FAILED(2100,"Attendance list request failed."),
 
 
     /**
-     * Price Api
+     * Crypto Price
      */
     PRICE_REQUEST_SUCCEED(1000,"Request succeed."),
-    PRICE_REQUEST_FAILED(1000,"Request succeed."),
+    PRICE_REQUEST_FAILED(2100,"Request failed."),
     // alert
+
+    /**
+     * Crypto
+     */
+    CRYPTO_REQUEST_SUCCEED(1000,"Request succeed."),
+    CRYPTO_REQUEST_FAILED(2100,"Request failed."),
+    CRYPTO_INVALID_STATUS(2101,"Invalid status : %s"),
+
+    /**
+     * Crypto Admin
+     */
+    // Post
+    CRYPTO_NAME_NOT_EXIST(2102,"%s is a name that doesn't exists."),
+    CRYPTO_NAME_EXIST(2103,"%s is a name that already exists."),
+
+    // PUT
+    CRYPTO_PUT_SUCCEED(1000,"Crypto information has been modified."),
+    CRYPTO_PUT_FAILED(2100,"Crypto information modification failed."),
+
+    // DELETE
+    CRYPTO_DELETE_SUCCEED(1000,"Crypto information has been deleted."),
+    CRYPTO_DELETE_FAILED(2100,"Crypto information deletion failed."),
     ;
 
     private final int code;

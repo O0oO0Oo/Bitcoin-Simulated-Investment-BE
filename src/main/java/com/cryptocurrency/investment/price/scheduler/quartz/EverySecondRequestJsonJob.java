@@ -6,10 +6,10 @@ import com.cryptocurrency.investment.price.dto.scheduler.PricePerMinuteDataDto;
 import com.cryptocurrency.investment.price.dto.scheduler.PricePerMinuteDto;
 import com.cryptocurrency.investment.price.repository.redis.PriceInfoRedisRepository;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import lombok.RequiredArgsConstructor;
 import org.quartz.Job;
 import org.quartz.JobExecutionContext;
 import org.quartz.JobExecutionException;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
@@ -19,14 +19,14 @@ import java.net.HttpURLConnection;
 import java.net.URL;
 
 @Component
-@RequiredArgsConstructor
 public class EverySecondRequestJsonJob implements Job {
-    private final PriceInfoRedisRepository redisRepository;
+    @Autowired
+    private PriceInfoRedisRepository redisRepository;
+    @Autowired
+    private PricePerMinuteDto pricePerMinuteDto;
 
-    private final PricePerMinuteDto pricePerMinuteDto;
-
-    @Value("&{crypto.redis.time}")
-    private final int TIME;
+    @Value("${crypto.redis.time}")
+    private int TIME;
 
     /**
      * Todo: 현재는 request 패키지의 Class들에 ObjectMapper를 통해 매핑 후 다시 CurrencyPriceRedis 생성자를 통해 저장하고 있다.

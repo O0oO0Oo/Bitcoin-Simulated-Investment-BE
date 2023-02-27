@@ -29,12 +29,12 @@ public class UserJoinController {
      * 바인딩 에러 -> 등록된 이매일인지 -> 메일을 보낸지 2분내일떄 -> 메일 첫요청/재요청 -> MailException
      */
     @PostMapping("/email")
-    public @ResponseBody ResponseWrapperDto sendValidationEmail(@RequestBody @Valid UserEmailDto emailDto, BindingResult bindingResult) {
+    public @ResponseBody ResponseWrapperDto validationMailSend(@RequestBody @Valid UserEmailDto emailDto, BindingResult bindingResult) {
         if (bindingResult.hasErrors()) {
             return ResponseWrapperDto.of(fieldError(bindingResult), ResponseStatus.INVALID_FORMAT);
         }
 
-        if (userJoinService.isExistEmail(emailDto)) {
+        if (userJoinService.findEmailByEmail(emailDto)) {
             return ResponseWrapperDto.of(ResponseStatus.USER_EMAIL_UNAVAILABLE);
         }
 
@@ -59,12 +59,12 @@ public class UserJoinController {
      * 바인딩 에러 -> 등록된 이메일인지
      */
     @GetMapping("/email")
-    public @ResponseBody ResponseWrapperDto checkEmail(@RequestBody @Valid UserEmailDto emailDto, BindingResult bindingResult) {
+    public @ResponseBody ResponseWrapperDto emailDetails(@RequestBody @Valid UserEmailDto emailDto, BindingResult bindingResult) {
         if (bindingResult.hasErrors()) {
             return ResponseWrapperDto.of(fieldError(bindingResult), ResponseStatus.INVALID_FORMAT);
         }
 
-        if (userJoinService.isExistEmail(emailDto)) {
+        if (userJoinService.findEmailByEmail(emailDto)) {
             return ResponseWrapperDto.of(ResponseStatus.USER_EMAIL_UNAVAILABLE);
         } else {
             return ResponseWrapperDto.of(ResponseStatus.USER_EMAIL_AVAILABLE);
@@ -75,12 +75,12 @@ public class UserJoinController {
      * 바인딩 에러 -> 등록된 이름인지
      */
     @GetMapping("/username")
-    public @ResponseBody ResponseWrapperDto checkUsername(@RequestBody @Valid UsernameDto usernameDto, BindingResult bindingResult) {
+    public @ResponseBody ResponseWrapperDto userDetails(@RequestBody @Valid UsernameDto usernameDto, BindingResult bindingResult) {
         if (bindingResult.hasErrors()) {
             return ResponseWrapperDto.of(fieldError(bindingResult), ResponseStatus.INVALID_FORMAT);
         }
 
-        if (userJoinService.isExistUsername(usernameDto)) {
+        if (userJoinService.findUserByUsername(usernameDto)) {
             return ResponseWrapperDto.of(ResponseStatus.USER_USERNAME_UNAVAILABLE);
         } else {
             return ResponseWrapperDto.of(ResponseStatus.USER_USERNAME_AVAILABLE);
@@ -91,7 +91,7 @@ public class UserJoinController {
      * 바인딩 에러 -> 인증코드 확인(이메일. 인증코드) -> 오래된 인증코드인지 확인 -> 등록된 이름인지
      */
     @PostMapping
-    public @ResponseBody ResponseWrapperDto join(@RequestBody @Valid UserAccountDto joinDto, BindingResult bindingResult) {
+    public @ResponseBody ResponseWrapperDto userAdd(@RequestBody @Valid UserAccountDto joinDto, BindingResult bindingResult) {
         if (bindingResult.hasErrors()) {
             return ResponseWrapperDto.of(fieldError(bindingResult), ResponseStatus.INVALID_FORMAT);
         }
@@ -104,11 +104,11 @@ public class UserJoinController {
             return ResponseWrapperDto.of(ResponseStatus.USER_JOIN_VALIDATION_CODE_EXPIRED);
         }
 
-        if (userJoinService.isExistUsername(joinDto)){
+        if (userJoinService.findUserByUsername(joinDto)){
             return ResponseWrapperDto.of(ResponseStatus.USER_USERNAME_UNAVAILABLE);
         }
 
-        return ResponseWrapperDto.of(userJoinService.userSave(joinDto), ResponseStatus.USER_JOIN_SUCCEED);
+        return ResponseWrapperDto.of(userJoinService.saveUser(joinDto), ResponseStatus.USER_JOIN_SUCCEED);
     }
 
     /**

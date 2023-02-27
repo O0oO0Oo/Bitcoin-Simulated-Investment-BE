@@ -27,6 +27,6 @@ public class PriceInfoRedis implements Serializable{
     private String price;
 
     @TimeToLive(unit = TimeUnit.SECONDS)
-    private int expiration;
+    private Integer expiration;
 }
 

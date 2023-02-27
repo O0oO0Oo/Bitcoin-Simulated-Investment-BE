@@ -70,4 +70,4 @@ mail:
     # validation code resend time(second) interval
     resend: 120
     # validation expire time(second)
-    expire: 10
+    expire: 600

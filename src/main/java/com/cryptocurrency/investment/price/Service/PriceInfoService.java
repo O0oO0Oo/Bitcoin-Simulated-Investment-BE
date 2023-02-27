@@ -30,12 +30,12 @@ public class PriceInfoService {
         intervalUnitConverter.put("d", 8640L);
     }
 
-    public ResponsePriceInfoDto getPriceInfoRedis(String name) {
+    public ResponsePriceInfoDto redisFindPrice(String name) {
         return ResponsePriceInfoDto.fromRedis(
                 redisRepository.findTop300ByNameOrderByTimestampDesc(name));
     }
 
-    public ResponsePriceInfoDto getPriceInfoMysql(String name, Long interval, String unit){
+    public ResponsePriceInfoDto mysqlFindPrice(String name, Long interval, String unit){
         return ResponsePriceInfoDto.fromMysql(
                 mysqlRepository.findByTimestampInterval(name,interval * intervalUnitConverter.get(unit)),
                 interval,
