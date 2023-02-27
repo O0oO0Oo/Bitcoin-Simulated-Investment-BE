@@ -1,12 +1,17 @@
 package com.cryptocurrency.investment.user.controller;
 
+import com.cryptocurrency.investment.config.response.ResponseStatus;
+import com.cryptocurrency.investment.config.response.ResponseWrapperDto;
+import com.cryptocurrency.investment.user.domain.Attendance;
+import com.cryptocurrency.investment.user.dto.response.UserAttendanceDto;
 import com.cryptocurrency.investment.user.service.UserAttendanceService;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDate;
-import java.util.HashSet;
+import java.util.List;
 
 
 @RestController
@@ -16,12 +21,25 @@ public class UserAttendanceController {
     private final UserAttendanceService attendanceService;
 
     @GetMapping("/attendance")
-    public @ResponseBody HashSet<LocalDate> getAttendance(HttpServletRequest request) {
-        return attendanceService.getAttendanceList(request.getHeader("Authorization").replace("Bearer ", ""));
+    public @ResponseBody ResponseWrapperDto attendanceList(Authentication authentication) {
+        return ResponseWrapperDto.of(ResponseStatus.USER_ATTENDANCE_LIST_SUCCEED,
+                UserAttendanceDto.of(
+                        attendanceService.findAttendance(authentication.getName())
+                )
+        );
     }
 
     @PostMapping("/attendance")
-    public @ResponseBody HashSet<LocalDate> attendance(HttpServletRequest request){
-        return attendanceService.doAttendance(request.getHeader("Authorization").replace("Bearer ", ""));
+    public @ResponseBody ResponseWrapperDto attendanceAdd(Authentication authentication){
+        List<LocalDate> attendance = attendanceService.addAttendance(authentication.getName());
+
+        if (attendance.isEmpty()) {
+            return ResponseWrapperDto.of(ResponseStatus.USER_ATTENDANCE_ALREADY_DONE);
+        }
+        else {
+            return ResponseWrapperDto.of(ResponseStatus.USER_ATTENDANCE_SUCCEED,
+                    UserAttendanceDto.of(attendance)
+            );
+        }
     }
 }

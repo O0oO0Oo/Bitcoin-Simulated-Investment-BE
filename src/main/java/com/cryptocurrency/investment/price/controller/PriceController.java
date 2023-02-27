@@ -10,32 +10,31 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-@RequiredArgsConstructor
-@RequestMapping("/api/price")
 @RestController
-public class PriceInfoController {
+@RequestMapping("/crypto/price")
+@RequiredArgsConstructor
+public class PriceController {
 
-    @Autowired
-    private PriceInfoService priceInfoService;
+    private final PriceInfoService priceInfoService;
 
     /**
      * TODO: Paging 으로 최적화 하기
      */
     @GetMapping("/{name}/1s")
-    public ResponseWrapperDto priceInfoRedisMapping(@PathVariable String name) {
+    public ResponseWrapperDto redisPriceList(@PathVariable String name) {
         try {
-            return ResponseWrapperDto.of(ResponseStatus.PRICE_REQUEST_SUCCEED, priceInfoService.getPriceInfoRedis(name));
+            return ResponseWrapperDto.of(ResponseStatus.PRICE_REQUEST_SUCCEED, priceInfoService.redisFindPrice(name));
         } catch (Exception e) {
             return ResponseWrapperDto.of(ResponseStatus.PRICE_REQUEST_FAILED);
         }
     }
 
     @GetMapping("/{name}/{interval}/{unit}")
-    public ResponseWrapperDto priceInfoMysqlMapping(@PathVariable String name,
+    public ResponseWrapperDto mysqlPriceList(@PathVariable String name,
                                                     @PathVariable Long interval,
                                                     @PathVariable String unit) {
         try {
-            return ResponseWrapperDto.of(ResponseStatus.PRICE_REQUEST_SUCCEED, priceInfoService.getPriceInfoMysql(name, interval, unit));
+            return ResponseWrapperDto.of(ResponseStatus.PRICE_REQUEST_SUCCEED, priceInfoService.mysqlFindPrice(name, interval, unit));
         } catch (Exception e) {
             return ResponseWrapperDto.of(ResponseStatus.PRICE_REQUEST_FAILED);
         }

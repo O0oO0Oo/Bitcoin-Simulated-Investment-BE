@@ -1,47 +1,39 @@
 package com.cryptocurrency.investment.auth.controller;
 
-import com.cryptocurrency.investment.auth.dto.AuthenticationRequestDto;
-import com.cryptocurrency.investment.auth.service.AuthenticationService;
+import com.cryptocurrency.investment.auth.dto.AuthenticationResponseDto;
+import com.cryptocurrency.investment.auth.jwt.JwtUtils;
 import com.cryptocurrency.investment.config.response.ResponseStatus;
 import com.cryptocurrency.investment.config.response.ResponseWrapperDto;
-import jakarta.validation.Valid;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.authentication.BadCredentialsException;
-import org.springframework.validation.BindingResult;
-import org.springframework.validation.FieldError;
-import org.springframework.web.bind.annotation.*;
+import com.cryptocurrency.investment.user.domain.UserAccount;
+import com.cryptocurrency.investment.user.service.UserService;
+import lombok.RequiredArgsConstructor;
+import org.springframework.security.core.Authentication;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.RestController;
 
-import java.util.stream.Collectors;
+import java.util.Optional;
 
 @RestController
 @RequestMapping("/user")
+@RequiredArgsConstructor
 public class AuthenticationController {
-    @Autowired
-    AuthenticationService authenticationService;
+    private final UserService userService;
+    private final JwtUtils jwtUtils;
 
     /**
-     * 바인딩 에러 -> 로그인 성공/실패
+     * 로그인 성공/실패
      */    
     @PostMapping("/login")
-    public @ResponseBody ResponseWrapperDto login(@RequestBody @Valid AuthenticationRequestDto authenticationRequestDto,
-                                                  BindingResult bindingResult) {
-        if (bindingResult.hasErrors()) {
-            return ResponseWrapperDto.of(fieldError(bindingResult), ResponseStatus.INVALID_FORMAT);
-        }
-
-        try {
-            return ResponseWrapperDto.of(ResponseStatus.USER_LOGIN_SUCCEED, authenticationService.userLogin(authenticationRequestDto));
-        } catch(BadCredentialsException e) {
+    public @ResponseBody ResponseWrapperDto authDetail(Authentication authentication){
+        if (authentication == null) {
             return ResponseWrapperDto.of(ResponseStatus.USER_LOGIN_FAILED);
         }
-    }
-
-    /**
-     * TODO: AOP
-     */
-    public String fieldError(BindingResult bindingResult) {
-        return bindingResult.getFieldErrors().stream().map(
-                FieldError::getField
-        ).collect(Collectors.joining(", "));
+        String token = jwtUtils.generateAccessToken(authentication);
+        return ResponseWrapperDto.of(
+                ResponseStatus.USER_LOGIN_SUCCEED,
+                AuthenticationResponseDto.of(authentication.getName(), token)
+        );
     }
 }

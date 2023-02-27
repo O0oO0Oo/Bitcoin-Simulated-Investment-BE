@@ -24,8 +24,8 @@ public class UserController {
      * 조회 성공/실패
      */
     @GetMapping
-    public @ResponseBody ResponseWrapperDto userInfo(HttpServletRequest request){
-        return userService.getUserInfo(request.getHeader("Authorization").replace("Bearer ", ""))
+    public @ResponseBody ResponseWrapperDto userDetails(HttpServletRequest request){
+        return userService.findUser(request.getHeader("Authorization").replace("Bearer ", ""))
                 .map(
                         userInfo -> ResponseWrapperDto.of(ResponseStatus.USER_INFO_GET_SUCCEED, UserGetDto.of(userInfo))
                 ).orElse(
@@ -44,14 +44,14 @@ public class UserController {
             return ResponseWrapperDto.of(fieldError(bindingResult), ResponseStatus.INVALID_FORMAT);
         }
 
-        if (userService.isExistUsername(modifyDto)) {
+        if (userService.findUserByUsername(modifyDto)) {
             return ResponseWrapperDto.of(ResponseStatus.USER_USERNAME_UNAVAILABLE);
         }
 
         String token = request.getHeader("Authorization").replace("Bearer ", "");
 
-        if (userService.modifyUserInfo(token, modifyDto) == 1) {
-            return userService.getUserInfo(request.getHeader("Authorization").replace("Bearer ", ""))
+        if (userService.modifyUser(token, modifyDto) == 1) {
+            return userService.findUser(request.getHeader("Authorization").replace("Bearer ", ""))
                     .map(
                             userInfo -> ResponseWrapperDto.of(ResponseStatus.USER_INFO_PUT_SUCCEED, UserGetDto.of(userInfo))
                     ).orElse(
@@ -66,9 +66,9 @@ public class UserController {
      * DELETE 성공/실패
      */
     @DeleteMapping
-    public @ResponseBody ResponseWrapperDto userDelete(HttpServletRequest request) {
+    public @ResponseBody ResponseWrapperDto userRemove(HttpServletRequest request) {
         String token = request.getHeader("Authorization").replace("Bearer ", "");
-        if (userService.deleteUserInfo(token) == 1) {
+        if (userService.deleteUser(token) == 1) {
             return ResponseWrapperDto.of(ResponseStatus.USER_INFO_DELETE_SUCCEED);
         } else {
             return ResponseWrapperDto.of(ResponseStatus.USER_INFO_DELETE_FAILED);

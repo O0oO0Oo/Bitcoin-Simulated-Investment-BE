@@ -10,6 +10,8 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDate;
+
 @Service
 @RequiredArgsConstructor
 public class UserJoinService {
@@ -17,27 +19,28 @@ public class UserJoinService {
 
     private final PasswordEncoder passwordEncoder;
 
-    public String userSave(UserAccountDto joinDto) {
-        return userRepository.save(
-                        new UserAccount(
-                                joinDto.email(),
-                                joinDto.username(),
-                                passwordEncoder.encode(joinDto.password()),
-                                Role.USER)
-                )
-                .getUsername();
+    public String saveUser(UserAccountDto joinDto) {
+        UserAccount user = new UserAccount();
+        user.setEmail(joinDto.email());
+        user.setUsername(joinDto.username());
+        user.setPassword(passwordEncoder.encode(joinDto.password()));
+        user.setRole(Role.USER);
+        user.setJoinDate(LocalDate.now());
+        user.setDeleted(false);
+
+        return userRepository.save(user).getEmail();
     }
 
-    public boolean isExistEmail(UserEmailDto emailDto) {
+    public boolean findEmailByEmail(UserEmailDto emailDto) {
         return userRepository.existsByEmail(emailDto.email());
     }
 
 
-    public boolean isExistUsername(UsernameDto usernameDto) {
+    public boolean findUserByUsername(UsernameDto usernameDto) {
         return userRepository.existsByUsername(usernameDto.username());
     }
 
-    public boolean isExistUsername(UserAccountDto userAccountDto) {
+    public boolean findUserByUsername(UserAccountDto userAccountDto) {
         return userRepository.existsByUsername(userAccountDto.username());
     }
 }

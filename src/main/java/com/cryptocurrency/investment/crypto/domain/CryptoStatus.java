@@ -1,5 +1,5 @@
 package com.cryptocurrency.investment.crypto.domain;
 
 public enum CryptoStatus {
-    MAJOR, NOMAL, NEW
+    MAJOR, NORMAL, NEW, NOT_USED, DELETED
 }

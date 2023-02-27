@@ -6,8 +6,10 @@ import com.cryptocurrency.investment.user.dto.request.UserModifyDto;
 import com.cryptocurrency.investment.user.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -21,22 +23,26 @@ public class UserService {
 
     private final UserRepository userRepository;
 
-    public Optional<UserAccount> getUserInfo(String token) {
+    public Optional<UserAccount> findUser(String token) {
         String email = jwtUtils.getSubject(token);
         return userRepository.findByEmail(email);
     }
 
-    public int modifyUserInfo(String token, UserModifyDto modifyDto) {
+    public int modifyUser(String token, UserModifyDto modifyDto) {
         String email = jwtUtils.getSubject(token);
         return userRepository.updateUser(email, modifyDto.username(), modifyDto.password());
     }
 
-    public int deleteUserInfo(String token) {
+    public int deleteUser(String token) {
         String email = jwtUtils.getSubject(token);
         return userRepository.deleteByEmail(email);
     }
 
-    public boolean isExistUsername(UserModifyDto modifyDto) {
+    public boolean findUserByUsername(UserModifyDto modifyDto) {
         return userRepository.existsByUsername(modifyDto.username());
+    }
+
+    public Optional<UserAccount> findUserByEmail(Authentication authentication) {
+        return userRepository.findByEmail(authentication.getName());
     }
 }
