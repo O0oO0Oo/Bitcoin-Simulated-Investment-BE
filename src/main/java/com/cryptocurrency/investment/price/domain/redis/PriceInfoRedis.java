@@ -1,5 +1,6 @@
 package com.cryptocurrency.investment.price.domain.redis;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.Id;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -16,6 +17,7 @@ import java.util.concurrent.TimeUnit;
 public class PriceInfoRedis implements Serializable{
     
     @Id
+    @JsonIgnore
     private String id;
 
     @Indexed
@@ -24,9 +26,10 @@ public class PriceInfoRedis implements Serializable{
     @Indexed
     private Long timestamp;
 
-    private String price;
+    private double price;
 
     @TimeToLive(unit = TimeUnit.SECONDS)
+    @JsonIgnore
     private Integer expiration;
 }
 

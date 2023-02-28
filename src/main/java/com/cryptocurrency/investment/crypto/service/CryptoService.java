@@ -5,10 +5,12 @@ import com.cryptocurrency.investment.crypto.domain.CryptoStatus;
 import com.cryptocurrency.investment.crypto.dto.CryptoDto;
 import com.cryptocurrency.investment.crypto.dto.CryptoModifyDto;
 import com.cryptocurrency.investment.crypto.repository.CryptoRepository;
+import com.cryptocurrency.investment.transaction.dto.request.TransactionRequestDto;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
@@ -26,6 +28,9 @@ public class CryptoService {
         return cryptoRepository.findByStatus(status);
     }
 
+    public Optional<Crypto> userFindStatusCrypto(TransactionRequestDto txDto){
+        return cryptoRepository.findByNameExceptStatus(txDto.name());
+    }
     /**
      * Admin
      */

@@ -1,5 +1,6 @@
 package com.cryptocurrency.investment.auth.jwt;
 
+import com.cryptocurrency.investment.user.domain.UserAccount;
 import io.jsonwebtoken.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -14,7 +15,7 @@ import java.util.stream.Collectors;
 public class JwtUtils {
     private static final Logger LOGGER = LoggerFactory.getLogger(JwtUtils.class);
 
-    private static final long EXPIRE_DURATION = 60 * 60 * 1000; // 1 hour
+    private static final long EXPIRE_DURATION = 60 * 60 * 1000 * 24; // 1 hour
 
     @Value("${jwt.secret}")
     private String SECRET_KEY;
@@ -38,7 +39,7 @@ public class JwtUtils {
     public String generateAccessToken(Authentication authentication) {
         return Jwts.builder()
                 .setSubject("Json Web Token")
-                .claim("email", authentication.getPrincipal())
+                .claim("id", authentication.getName())
                 .claim("authorities",
                         authentication.getAuthorities().stream()
                                 .map(authority -> "ROLE_" + authority.getAuthority().toString())

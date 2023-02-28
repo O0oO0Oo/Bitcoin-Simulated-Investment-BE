@@ -11,6 +11,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
+import java.util.UUID;
 
 @Service
 @RequiredArgsConstructor
@@ -24,23 +25,22 @@ public class UserJoinService {
         user.setEmail(joinDto.email());
         user.setUsername(joinDto.username());
         user.setPassword(passwordEncoder.encode(joinDto.password()));
-        user.setRole(Role.USER);
-        user.setJoinDate(LocalDate.now());
-        user.setDeleted(false);
-
+        user.setId(
+                UUID.nameUUIDFromBytes((user.getEmail() + user.getUsername()).getBytes())
+        );
         return userRepository.save(user).getEmail();
     }
 
     public boolean findEmailByEmail(UserEmailDto emailDto) {
-        return userRepository.existsByEmail(emailDto.email());
+        return userRepository.existsByEmail(emailDto.email().toLowerCase());
     }
 
 
     public boolean findUserByUsername(UsernameDto usernameDto) {
-        return userRepository.existsByUsername(usernameDto.username());
+        return userRepository.existsByUsername(usernameDto.username().toLowerCase());
     }
 
     public boolean findUserByUsername(UserAccountDto userAccountDto) {
-        return userRepository.existsByUsername(userAccountDto.username());
+        return userRepository.existsByUsername(userAccountDto.username().toLowerCase());
     }
 }

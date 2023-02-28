@@ -24,6 +24,13 @@ public interface CryptoRepository extends JpaRepository<Crypto,Long> {
             , nativeQuery = true)
     List<Crypto> findAllExceptStatus();
 
+    @Query(value = "SELECT * " +
+            "FROM (" +
+            "SELECT  * FROM Crypto WHERE name = :name) as c " +
+            "WHERE c.status != 'NOT_USED' or c.status != 'DELETED'"
+            , nativeQuery = true)
+    Optional<Crypto> findByNameExceptStatus(@Param("name") String name);
+
     /**
      * Admin
      */
@@ -45,4 +52,5 @@ public interface CryptoRepository extends JpaRepository<Crypto,Long> {
             "WHERE c.name = :name", nativeQuery = true)
     int deleteCrypto(@Param("name") String name,
                      @Param("status") String status);
+
 }

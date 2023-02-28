@@ -28,14 +28,15 @@ public class JwtAuthenticationProvider implements AuthenticationProvider {
     public Authentication authenticate(Authentication authentication) throws AuthenticationException {
         String email = authentication.getName();
         String password = authentication.getCredentials().toString();
-        Optional<UserAccount> user = userRepository.findByEmail(email);
-        if(!user.isEmpty()){
-            if (passwordEncoder.matches(password, user.get().getPassword())) {
+        Optional<UserAccount> userOpt = userRepository.findByEmail(email);
+        if(!userOpt.isEmpty()){
+            UserAccount user = userOpt.get();
+            if (passwordEncoder.matches(password, user.getPassword())) {
                 List<GrantedAuthority> grantedAuthorities = new ArrayList<>();
-                grantedAuthorities.add(new SimpleGrantedAuthority(user.get().getRole().toString()));
+                grantedAuthorities.add(new SimpleGrantedAuthority(user.getRole().toString()));
                 return new UsernamePasswordAuthenticationToken(
-                        email,
-                        password,
+                        user.getId(),
+                        user.getPassword(),
                         grantedAuthorities
                 );
             }

@@ -1,34 +1,46 @@
 package com.cryptocurrency.investment.user.domain;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.cryptocurrency.investment.crypto.domain.FavoriteCrypto;
+import com.cryptocurrency.investment.transaction.domain.Transaction;
+import com.cryptocurrency.investment.wallet.domain.Wallet;
+import com.fasterxml.jackson.annotation.JsonSubTypes;
 import jakarta.persistence.*;
+import jakarta.validation.constraints.Min;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.hibernate.annotations.GenericGenerator;
+import org.hibernate.annotations.Type;
+import org.jetbrains.annotations.Range;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
+import java.util.UUID;
 
 @Data
 @Entity
 @NoArgsConstructor
 public class UserAccount {
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
-    private Long id;
+    private UUID id;
     @Column(unique = true)
     private String email;
     @Column(unique = true)
     private String username;
     private String password;
     @Enumerated(EnumType.STRING)
-    private Role role;
-    private LocalDate joinDate;
-    @OneToMany(mappedBy = "userAccount")
+    private Role role = Role.USER;
+    private LocalDate joinDate = LocalDate.now();
+    @OneToMany(mappedBy = "userAccount", fetch = FetchType.LAZY)
     private List<UserAttendance> attendances = new ArrayList<>();
-    private boolean isDeleted;
-    private boolean isSuspended;
-    private LocalDate suspensionDate;
+    private boolean isDeleted = false;
+    private boolean isSuspended = false;
+    private LocalDate suspensionDate = LocalDate.now();
+    @OneToMany(mappedBy = "userAccount", fetch = FetchType.LAZY)
+    private List<Wallet> wallets = new ArrayList<>();
+    @OneToMany(mappedBy = "userAccount", fetch = FetchType.LAZY)
+    private List<Transaction> transactions = new ArrayList<>();
+    private double money = 10000000.0;
+    @OneToMany(mappedBy = "userAccount", fetch = FetchType.LAZY)
+    private List<FavoriteCrypto> favoriteCryptos = new ArrayList<>();
 }

@@ -6,6 +6,7 @@ import com.cryptocurrency.investment.config.response.ResponseStatus;
 import com.cryptocurrency.investment.config.response.ResponseWrapperDto;
 import com.cryptocurrency.investment.user.domain.UserAccount;
 import com.cryptocurrency.investment.user.service.UserService;
+import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -33,7 +34,7 @@ public class AuthenticationController {
         String token = jwtUtils.generateAccessToken(authentication);
         return ResponseWrapperDto.of(
                 ResponseStatus.USER_LOGIN_SUCCEED,
-                AuthenticationResponseDto.of(authentication.getName(), token)
+                AuthenticationResponseDto.of(token)
         );
     }
 }

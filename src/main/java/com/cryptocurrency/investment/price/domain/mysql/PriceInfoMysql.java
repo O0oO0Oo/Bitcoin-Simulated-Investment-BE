@@ -1,5 +1,6 @@
 package com.cryptocurrency.investment.price.domain.mysql;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -15,6 +16,7 @@ public class PriceInfoMysql {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @JsonIgnore
     private Long id;
 
     @Column(nullable = false, length = 20)
@@ -24,13 +26,13 @@ public class PriceInfoMysql {
     private Long timestamp;
 
     @Column(nullable = false)
-    private String price;
+    private double price;
 
-    private String maxPrice;
+    private double maxPrice;
 
-    private String minPrice;
+    private double minPrice;
 
-    public PriceInfoMysql(String name, Long timestamp, String curPrice, String maxPrice, String minPrice) {
+    public PriceInfoMysql(String name, Long timestamp, double curPrice, double maxPrice, double minPrice) {
         this.name = name;
         this.timestamp = timestamp;
         this.price = curPrice;
