@@ -10,9 +10,9 @@ public record ResponsePriceInfoDto(
         String name,
         String timeInterval,
         Long timestamp,
-        List<String> price
+        List<Double> price
 ) {
-    public static ResponsePriceInfoDto of(String name,String timeInterval, Long timestamp, List<String> price) {
+    public static ResponsePriceInfoDto of(String name,String timeInterval, Long timestamp, List<Double> price) {
         return new ResponsePriceInfoDto(name,timeInterval ,timestamp, price);
     }
 

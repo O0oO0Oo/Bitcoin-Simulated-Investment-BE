@@ -6,6 +6,7 @@ import com.cryptocurrency.investment.price.dto.scheduler.PricePerMinuteDataDto;
 import com.cryptocurrency.investment.price.dto.scheduler.PricePerMinuteDto;
 import com.cryptocurrency.investment.price.repository.redis.PriceInfoRedisRepository;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import lombok.RequiredArgsConstructor;
 import org.quartz.Job;
 import org.quartz.JobExecutionContext;
 import org.quartz.JobExecutionException;
@@ -19,11 +20,10 @@ import java.net.HttpURLConnection;
 import java.net.URL;
 
 @Component
+@RequiredArgsConstructor
 public class EverySecondRequestJsonJob implements Job {
-    @Autowired
-    private PriceInfoRedisRepository redisRepository;
-    @Autowired
-    private PricePerMinuteDto pricePerMinuteDto;
+    private final PriceInfoRedisRepository redisRepository;
+    private final PricePerMinuteDto pricePerMinuteDto;
 
     @Value("${crypto.redis.time}")
     private int TIME;
@@ -71,7 +71,7 @@ public class EverySecondRequestJsonJob implements Job {
                     k + finalLocalDateTime,
                     k,
                     finalLocalDateTime,
-                    v.getClosing_price(),
+                    Double.parseDouble(v.getClosing_price()),
                     TIME));
         });
     }

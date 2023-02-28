@@ -4,13 +4,17 @@ import lombok.Getter;
 
 @Getter
 public enum ResponseStatus {
+
+    /**
+     * Common
+     */
+    // 공통 에러 처리
+    INVALID_FORMAT(2000,"Invalid %s format."), // Email, [a-zA-Z0-9가-힣]
+    INVALID_PERMISSION(2001,"You don't have permission. %s"),
+
     /**
      * User
      */
-
-    // common 공통 에러 처리
-    INVALID_FORMAT(2000,"Invalid %s format."), // Email, [a-zA-Z0-9가-힣]
-    INVALID_PERMISSION(2001,"You don't have permission. %s"),
 
     // POST login 로그인
     USER_LOGIN_SUCCEED(1000,"Login succeed."),
@@ -37,13 +41,13 @@ public enum ResponseStatus {
     USER_USERNAME_UNAVAILABLE(2100,"Please use a different username."),
 
     // GET user 유저 조회 / 실패 -> 2001 INVALID_JWT
-    USER_INFO_GET_SUCCEED(1000,"User information search succeeded."),
-    USER_INFO_GET_FAILED(2100,"User information search failed."),
+    USER_INFO_GET_SUCCEED(1000,"User information request succeeded."),
+    USER_INFO_GET_FAILED(2100,"User information request failed."),
 
     // PUT user 수정 / 실패 -> 2000 INVALID_FORMAT, 2001 INVALID_JWT
     USER_INFO_PUT_SUCCEED(1000, "User information has been modified."),
     USER_INFO_PUT_FAILED(2100,"User information modification failed."),
-    USER_INFO_PUT_SUCCEED_GET_FAILED(2101,"User information has been modified. but User information search failed."),
+    USER_INFO_PUT_SUCCEED_GET_FAILED(2101,"User information has been modified. but User information request failed."),
 
     // DELETE user 삭제 / 실패 -> 2001 INVALID_JWT
     USER_INFO_DELETE_SUCCEED(1000, "User information has been deleted."),
@@ -63,9 +67,8 @@ public enum ResponseStatus {
     /**
      * Crypto Price
      */
-    PRICE_REQUEST_SUCCEED(1000,"Request succeed."),
-    PRICE_REQUEST_FAILED(2100,"Request failed."),
-    // alert
+    PRICE_REQUEST_SUCCEED(1000,"Price Information request succeed."),
+    PRICE_REQUEST_FAILED(2100,"Price Information request failed."),
 
     /**
      * Crypto
@@ -77,7 +80,7 @@ public enum ResponseStatus {
     /**
      * Crypto Admin
      */
-    // Post
+    // POST
     CRYPTO_NAME_NOT_EXIST(2102,"%s is a name that doesn't exists."),
     CRYPTO_NAME_EXIST(2103,"%s is a name that already exists."),
 
@@ -88,6 +91,25 @@ public enum ResponseStatus {
     // DELETE
     CRYPTO_DELETE_SUCCEED(1000,"Crypto information has been deleted."),
     CRYPTO_DELETE_FAILED(2100,"Crypto information deletion failed."),
+
+    /**
+     * Wallet
+     */
+    // GET
+    WALLET_REQUEST_SUCCEED(1000,"Wallet information request succeed."),
+    WALLET_REQUEST_FAILED(2100,"Wallet information request failed."),
+    WALLET_REQUEST_FAILED_EMPTY(2100,"Wallet is empty."),
+
+    /**
+     * Transaction
+     */
+    TRANSACTION_LIST_REQUEST_SUCCEED(1000,"Transaction information request Succeed."),
+    TRANSACTION_REQUEST_SUCCEED(1000,"Transaction succeed."),
+    TRANSACTION_REQUEST_FAILED(2100,"Transaction failed."),
+    TRANSACTION_SELL_FAILED_AMOUNT_LACKED(2100,"The amount of crypto is insufficient."),
+    TRANSACTION_REQUEST_FAILED_INVALID_CRYPTO(2100,"It is not currently a tradable crypto."),
+    TRANSACTION_BUY_REQUEST_FAILED_MONEY_LAKED(2100,"Insufficient money to trade."),
+
     ;
 
     private final int code;

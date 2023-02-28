@@ -55,7 +55,7 @@ spring:
 # val
 jwt:
   secret: 9d0u1hsdfuh109238478019dhuA
-
+  symmetric: 3i3918dhfapsdoia983soifoi
 regex:
   password: ^(?=.*[a-z].*)(?=.*[A-Z].*)(?=.*[0-9].*)(?=.*[!@#$%^&*].*).{8,}$
   username: ^[가-힣a-zA-Z]{6,20}$

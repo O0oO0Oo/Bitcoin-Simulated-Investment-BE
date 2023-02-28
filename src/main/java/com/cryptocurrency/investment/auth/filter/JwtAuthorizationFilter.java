@@ -33,6 +33,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.UUID;
 
 @Component
 @NoArgsConstructor
@@ -55,12 +56,12 @@ public class JwtAuthorizationFilter extends OncePerRequestFilter {
         if (token != null && jwtUtils.validateAccessToken(token)) {
             Claims claims = jwtUtils.parseClaim(token);
 
-            String email = claims.get("email").toString();
+            UUID id = UUID.fromString(claims.get("id").toString());
             String authorities = claims.get("authorities").toString();
 
             UsernamePasswordAuthenticationToken authenticationToken =
                     new UsernamePasswordAuthenticationToken(
-                            email,
+                            id,
                             null,
                             AuthorityUtils.commaSeparatedStringToAuthorityList(authorities)
                     );

@@ -24,14 +24,14 @@ public class UserAttendanceController {
     public @ResponseBody ResponseWrapperDto attendanceList(Authentication authentication) {
         return ResponseWrapperDto.of(ResponseStatus.USER_ATTENDANCE_LIST_SUCCEED,
                 UserAttendanceDto.of(
-                        attendanceService.findAttendance(authentication.getName())
+                        attendanceService.findAttendance(authentication)
                 )
         );
     }
 
     @PostMapping("/attendance")
     public @ResponseBody ResponseWrapperDto attendanceAdd(Authentication authentication){
-        List<LocalDate> attendance = attendanceService.addAttendance(authentication.getName());
+        List<LocalDate> attendance = attendanceService.addAttendance(authentication);
 
         if (attendance.isEmpty()) {
             return ResponseWrapperDto.of(ResponseStatus.USER_ATTENDANCE_ALREADY_DONE);

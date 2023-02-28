@@ -8,7 +8,9 @@ import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
         basePackages = {
                 "com.cryptocurrency.investment.price.repository.mysql",
                 "com.cryptocurrency.investment.user.repository",
-                "com.cryptocurrency.investment.crypto.repository"
+                "com.cryptocurrency.investment.crypto.repository",
+                "com.cryptocurrency.investment.wallet.repository",
+                "com.cryptocurrency.investment.transaction.repository"
         })
 public class JpaConfig {
 }

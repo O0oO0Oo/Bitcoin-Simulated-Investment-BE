@@ -9,27 +9,25 @@ import org.springframework.data.repository.query.Param;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.UUID;
 
 public interface UserRepository extends JpaRepository<UserAccount, Long> {
-    Optional<UserAccount> findByUsername(String username);
-
     Optional<UserAccount> findByEmail(String email);
-
     Boolean existsByUsername(String username);
-
     Boolean existsByEmail(String email);
+    Optional<UserAccount> findById(UUID uuid);
 
     @Modifying
     @Transactional
     @Query(value =
             "UPDATE user_account ua" +
                     "SET ua.username = :username, ua.password = :password " +
-                    "WHERE ua.email = :email", nativeQuery = true)
-    int updateUser(@Param("email") String email,
+                    "WHERE ua.id = :id", nativeQuery = true)
+    int updateUser(@Param("id") UUID id,
                    @Param("username") String username,
                    @Param("password") String password);
 
     @Modifying
     @Transactional
-    int deleteByEmail(String email);
+    int deleteById(UUID id);
 }

@@ -18,6 +18,7 @@ import java.nio.file.Paths;
 import java.time.LocalDate;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.UUID;
 import java.util.stream.Collectors;
 
 @Configuration
@@ -37,16 +38,17 @@ public class InitializationDefaultConfig {
             admin.setEmail("Admin@frincoin.com");
             admin.setUsername("Admin");
             admin.setPassword(passwordEncoder.encode("admin"));
+            admin.setId(
+                    UUID.nameUUIDFromBytes((admin.getEmail() + admin.getUsername()).getBytes())
+            );
             admin.setRole(Role.ADMIN);
-            admin.setJoinDate(LocalDate.now());
-            admin.setDeleted(false);
 
             test.setEmail("test@frincoin.com");
             test.setUsername("test");
             test.setPassword(passwordEncoder.encode("test"));
-            test.setRole(Role.USER);
-            test.setJoinDate(LocalDate.now());
-            test.setDeleted(false);
+            test.setId(
+                    UUID.nameUUIDFromBytes((test.getEmail() + test.getUsername()).getBytes())
+            );
 
             userRepository.save(admin);
             userRepository.save(test);

@@ -17,6 +17,5 @@ public class Attendance {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
-    @Column(unique = true)
-    private LocalDate date;
+    private LocalDate date = LocalDate.now();
 }

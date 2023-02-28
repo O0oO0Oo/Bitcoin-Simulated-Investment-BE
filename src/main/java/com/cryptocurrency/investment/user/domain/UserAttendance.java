@@ -12,9 +12,9 @@ public class UserAttendance {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     private UserAccount userAccount;
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     private Attendance attendance;
     private LocalDate date;
 }
