@@ -1,11 +1,10 @@
 package com.cryptocurrency.investment.transaction.service;
 
 import com.cryptocurrency.investment.crypto.domain.Crypto;
-import com.cryptocurrency.investment.price.domain.redis.PriceInfoRedis;
 import com.cryptocurrency.investment.transaction.domain.Transaction;
 import com.cryptocurrency.investment.transaction.domain.TransactionStatus;
 import com.cryptocurrency.investment.transaction.dto.request.TransactionRequestDto;
-import com.cryptocurrency.investment.transaction.dto.response.TransactionResponseDto;
+import com.cryptocurrency.investment.transaction.dto.response.TransactionListResponseDto;
 import com.cryptocurrency.investment.transaction.repository.TransactionRepository;
 import com.cryptocurrency.investment.user.domain.UserAccount;
 import com.cryptocurrency.investment.user.repository.UserRepository;
@@ -42,21 +41,21 @@ public class TransactionService {
      * @param authentication
      * @return
      */
-    public List<TransactionResponseDto> findTx(Authentication authentication) {
+    public List<TransactionListResponseDto> findTx(Authentication authentication) {
         UUID id = UUID.fromString(authentication.getName());
         return transactionRepository.findByUserAccount_Id(id)
                 .stream()
                 .map(
-                        tx -> TransactionResponseDto.of(tx)
+                        tx -> TransactionListResponseDto.of(tx)
                 ).collect(Collectors.toList());
     }
 
-    public List<TransactionResponseDto> findNameTx(Authentication authentication, String name) {
+    public List<TransactionListResponseDto> findNameTx(Authentication authentication, String name) {
         UUID id = UUID.fromString(authentication.getName());
         return transactionRepository.findByUserAccount_IdAndName(id, name.toUpperCase())
                 .stream()
                 .map(
-                        tx -> TransactionResponseDto.of(tx)
+                        tx -> TransactionListResponseDto.of(tx)
                 ).collect(Collectors.toList());
     }
 
@@ -71,6 +70,7 @@ public class TransactionService {
         tx.setPrice(price);
         tx.setAmount(txDto.amount());
         tx.setStatus(TransactionStatus.COMPLETED);
+        tx.setType(txDto.type());
 
         tx.setUserAccount(user);
         tx.setCrypto(crypto);

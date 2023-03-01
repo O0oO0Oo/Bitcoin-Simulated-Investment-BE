@@ -9,21 +9,21 @@ import org.springframework.data.repository.query.Param;
 
 public interface EmailValidationRepository extends JpaRepository<EmailValidation, Long> {
 
-    boolean existsByEmailAndValidation(String email, String validation);
+    boolean existsByEmailAndCode(String email, Integer code);
 
     @Query(value =
             "SELECT :timeout - (UNIX_TIMESTAMP(NOW()) - UNIX_TIMESTAMP(timestamp)) " +
                     "FROM email_validation " +
-                    "WHERE email = :email and UNIX_TIMESTAMP(NOW()) - UNIX_TIMESTAMP(timestamp) <= :timeout", nativeQuery = true)
+                    "WHERE email = :email", nativeQuery = true)
     Integer findByEmailSent(@Param("email") String email, @Param("timeout") int timeout);
 
     @Modifying
     @Transactional
     @Query(value =
             "UPDATE email_validation ev " +
-                    "SET ev.timestamp = NOW(), ev.validation = :code " +
+                    "SET ev.timestamp = NOW(), ev.code = :code " +
                     "WHERE ev.email = :email", nativeQuery = true)
-    int updateByEmail(@Param("email") String email, @Param("code") String code);
+    int updateByEmail(@Param("email") String email, @Param("code") Integer code);
 
     @Modifying
     @Transactional

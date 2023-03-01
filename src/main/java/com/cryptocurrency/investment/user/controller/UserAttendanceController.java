@@ -15,7 +15,7 @@ import java.util.List;
 
 
 @RestController
-@RequestMapping("/user")
+@RequestMapping("/users")
 @RequiredArgsConstructor
 public class UserAttendanceController {
     private final UserAttendanceService attendanceService;
@@ -37,9 +37,7 @@ public class UserAttendanceController {
             return ResponseWrapperDto.of(ResponseStatus.USER_ATTENDANCE_ALREADY_DONE);
         }
         else {
-            return ResponseWrapperDto.of(ResponseStatus.USER_ATTENDANCE_SUCCEED,
-                    UserAttendanceDto.of(attendance)
-            );
+            return ResponseWrapperDto.of(ResponseStatus.USER_ATTENDANCE_SUCCEED);
         }
     }
 }

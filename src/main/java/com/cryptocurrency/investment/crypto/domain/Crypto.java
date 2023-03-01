@@ -2,6 +2,7 @@ package com.cryptocurrency.investment.crypto.domain;
 
 import com.cryptocurrency.investment.transaction.domain.Transaction;
 import com.cryptocurrency.investment.wallet.domain.Wallet;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -24,11 +25,14 @@ public class Crypto {
     @Enumerated(EnumType.STRING)
     @Column(nullable = false, length = 20)
     private CryptoStatus status;
-    @OneToMany(mappedBy = "crypto")
+    @JsonIgnore
+    @OneToMany(mappedBy = "crypto", fetch = FetchType.LAZY)
     private List<Wallet> wallets = new ArrayList<>();
-    @OneToMany(mappedBy = "crypto")
+    @JsonIgnore
+    @OneToMany(mappedBy = "crypto", fetch = FetchType.LAZY)
     private List<Transaction> transactions = new ArrayList<>();
-    @OneToMany(mappedBy = "crypto")
+    @JsonIgnore
+    @OneToMany(mappedBy = "crypto", fetch = FetchType.LAZY)
     private List<FavoriteCrypto> favoriteCryptos = new ArrayList<>();
     public Crypto(String name, CryptoStatus status) {
         this.name = name;

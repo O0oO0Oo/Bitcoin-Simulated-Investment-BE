@@ -9,7 +9,4 @@ UserModifyDto(
         @Pattern(regexp = "^(?=.*[a-z].*)(?=.*[A-Z].*)(?=.*[0-9].*)(?=.*[!@#$%^&*].*).{8,}$")
         String password
 ) {
-    static public UserModifyDto of(String username, String password) {
-        return new UserModifyDto(username, password);
-    }
 }

@@ -1,11 +1,10 @@
 package com.cryptocurrency.investment.transaction.dto.request;
 
 import com.cryptocurrency.investment.transaction.domain.TransactionType;
-import jakarta.validation.constraints.Min;
-import org.jetbrains.annotations.Range;
 
-public record TransactionRequestDto(
+public record ReservedTransactionRequestDto(
         String name,
+        double price,
         double amount,
         TransactionType type
 ) {

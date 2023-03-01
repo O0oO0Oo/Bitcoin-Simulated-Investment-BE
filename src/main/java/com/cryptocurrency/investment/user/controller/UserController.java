@@ -8,6 +8,7 @@ import com.cryptocurrency.investment.user.service.UserService;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.core.Authentication;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.FieldError;
 import org.springframework.web.bind.annotation.*;
@@ -15,7 +16,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.stream.Collectors;
 
 @RestController
-@RequestMapping("/user")
+@RequestMapping("/users")
 @RequiredArgsConstructor
 public class UserController {
     private final UserService userService;
@@ -24,8 +25,8 @@ public class UserController {
      * 조회 성공/실패
      */
     @GetMapping
-    public @ResponseBody ResponseWrapperDto userDetails(HttpServletRequest request){
-        return userService.findUser(request.getHeader("Authorization").replace("Bearer ", ""))
+    public @ResponseBody ResponseWrapperDto userDetails(Authentication authentication){
+        return userService.findUser(authentication)
                 .map(
                         userInfo -> ResponseWrapperDto.of(ResponseStatus.USER_INFO_GET_SUCCEED, UserGetDto.of(userInfo))
                 ).orElse(
@@ -39,7 +40,7 @@ public class UserController {
     @PutMapping
     public @ResponseBody ResponseWrapperDto userModify(@RequestBody @Valid UserModifyDto modifyDto,
                                                        BindingResult bindingResult,
-                                                       HttpServletRequest request) {
+                                                       Authentication authentication) {
         if (bindingResult.hasErrors()) {
             return ResponseWrapperDto.of(fieldError(bindingResult), ResponseStatus.INVALID_FORMAT);
         }
@@ -48,10 +49,8 @@ public class UserController {
             return ResponseWrapperDto.of(ResponseStatus.USER_USERNAME_UNAVAILABLE);
         }
 
-        String token = request.getHeader("Authorization").replace("Bearer ", "");
-
-        if (userService.modifyUser(token, modifyDto) == 1) {
-            return userService.findUser(request.getHeader("Authorization").replace("Bearer ", ""))
+        if (userService.modifyUser(authentication, modifyDto) == 1) {
+            return userService.findUser(authentication)
                     .map(
                             userInfo -> ResponseWrapperDto.of(ResponseStatus.USER_INFO_PUT_SUCCEED, UserGetDto.of(userInfo))
                     ).orElse(
@@ -66,9 +65,8 @@ public class UserController {
      * DELETE 성공/실패
      */
     @DeleteMapping
-    public @ResponseBody ResponseWrapperDto userRemove(HttpServletRequest request) {
-        String token = request.getHeader("Authorization").replace("Bearer ", "");
-        if (userService.deleteUser(token) == 1) {
+    public @ResponseBody ResponseWrapperDto userRemove(Authentication authentication) {
+        if (userService.deleteUser(authentication) == 1) {
             return ResponseWrapperDto.of(ResponseStatus.USER_INFO_DELETE_SUCCEED);
         } else {
             return ResponseWrapperDto.of(ResponseStatus.USER_INFO_DELETE_FAILED);

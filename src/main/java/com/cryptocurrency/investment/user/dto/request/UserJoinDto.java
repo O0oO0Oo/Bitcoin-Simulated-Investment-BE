@@ -5,7 +5,7 @@ import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Pattern;
 import org.jetbrains.annotations.Contract;
 
-public record UserAccountDto(
+public record UserJoinDto(
         @NotNull
         @Pattern(regexp = "^[가-힣a-zA-Z]{6,20}$")
         String username,
@@ -16,10 +16,10 @@ public record UserAccountDto(
         @Pattern(regexp = "^(?=.*[a-z].*)(?=.*[A-Z].*)(?=.*[0-9].*)(?=.*[!@#$%^&*].*).{8,}$")
         String password,
         @NotNull
-        String validation
+        Integer code
 ) {
     @Contract("_, _, _, _ -> new")
-    public static @NotNull UserAccountDto of(String username, String email, String password, String validation) {
-        return new UserAccountDto(username, email, password, validation);
+    public static @NotNull UserJoinDto of(String username, String email, String password, Integer code) {
+        return new UserJoinDto(username, email, password, code);
     }
 }

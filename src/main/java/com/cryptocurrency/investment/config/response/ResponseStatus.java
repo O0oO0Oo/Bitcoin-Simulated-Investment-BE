@@ -60,7 +60,7 @@ public enum ResponseStatus {
 
 
     // GET attendance 유저 출석 목록 불러오기
-    USER_ATTENDANCE_LIST_SUCCEED(1000,"Attendance list request succeeded."),
+    USER_ATTENDANCE_LIST_SUCCEED(1000,"Attendance list request succeed."),
     USER_ATTENDANCE_LIST_FAILED(2100,"Attendance list request failed."),
 
 
@@ -76,6 +76,20 @@ public enum ResponseStatus {
     CRYPTO_REQUEST_SUCCEED(1000,"Request succeed."),
     CRYPTO_REQUEST_FAILED(2100,"Request failed."),
     CRYPTO_INVALID_STATUS(2101,"Invalid status : %s"),
+
+    /**
+     * Favorite Crypto
+     */
+    // Get
+    FAVORITE_CRYPTO_SUCCEED(1000,"Request succeed."),
+    FAVORITE_CRYPTO_FAILED(1000,"Request failed."),
+
+    // Post
+    FAVORITE_CRYPTO_ADDED(1000,"Request succeed."),
+    FAVORITE_CRYPTO_REMOVED(1000,"Request succeed."),
+    FAVORITE_CRYPTO_REMOVED_FAILED(1000,"Request failed."),
+
+
 
     /**
      * Crypto Admin
@@ -107,7 +121,9 @@ public enum ResponseStatus {
     TRANSACTION_REQUEST_SUCCEED(1000,"Transaction succeed."),
     TRANSACTION_REQUEST_FAILED(2100,"Transaction failed."),
     TRANSACTION_SELL_FAILED_AMOUNT_LACKED(2100,"The amount of crypto is insufficient."),
+    TRANSACTION_SELL_FAILED_INVALID_TYPE(2100,"Invalid transaction type."),
     TRANSACTION_REQUEST_FAILED_INVALID_CRYPTO(2100,"It is not currently a tradable crypto."),
+    TRANSACTION_REQUEST_FAILED_1000(2100,"You must place an order of 1000 won or more."),
     TRANSACTION_BUY_REQUEST_FAILED_MONEY_LAKED(2100,"Insufficient money to trade."),
 
     ;

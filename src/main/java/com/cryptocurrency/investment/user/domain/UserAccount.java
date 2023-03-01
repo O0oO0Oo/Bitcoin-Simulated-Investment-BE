@@ -31,16 +31,16 @@ public class UserAccount {
     @Enumerated(EnumType.STRING)
     private Role role = Role.USER;
     private LocalDate joinDate = LocalDate.now();
-    @OneToMany(mappedBy = "userAccount", fetch = FetchType.LAZY)
+    @OneToMany(mappedBy = "userAccount")
     private List<UserAttendance> attendances = new ArrayList<>();
     private boolean isDeleted = false;
     private boolean isSuspended = false;
     private LocalDate suspensionDate = LocalDate.now();
-    @OneToMany(mappedBy = "userAccount", fetch = FetchType.LAZY)
+    @OneToMany(mappedBy = "userAccount")
     private List<Wallet> wallets = new ArrayList<>();
-    @OneToMany(mappedBy = "userAccount", fetch = FetchType.LAZY)
+    @OneToMany(mappedBy = "userAccount")
     private List<Transaction> transactions = new ArrayList<>();
     private double money = 10000000.0;
-    @OneToMany(mappedBy = "userAccount", fetch = FetchType.LAZY)
+    @OneToMany(mappedBy = "userAccount")
     private List<FavoriteCrypto> favoriteCryptos = new ArrayList<>();
 }

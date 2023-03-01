@@ -2,14 +2,13 @@ package com.cryptocurrency.investment.user.controller;
 
 import com.cryptocurrency.investment.config.response.ResponseStatus;
 import com.cryptocurrency.investment.config.response.ResponseWrapperDto;
+import com.cryptocurrency.investment.user.dto.request.UserJoinDto;
 import com.cryptocurrency.investment.user.dto.request.UserEmailDto;
-import com.cryptocurrency.investment.user.dto.request.UserAccountDto;
 import com.cryptocurrency.investment.user.dto.request.UsernameDto;
 import com.cryptocurrency.investment.user.service.EmailValidationService;
 import com.cryptocurrency.investment.user.service.UserJoinService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
-import org.springframework.mail.MailException;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.FieldError;
 import org.springframework.web.bind.annotation.*;
@@ -17,43 +16,11 @@ import org.springframework.web.bind.annotation.*;
 import java.util.stream.Collectors;
 
 @RestController
-@RequestMapping("/user")
+@RequestMapping("/users")
 @RequiredArgsConstructor
 public class UserJoinController {
-
     private final UserJoinService userJoinService;
     private final EmailValidationService validationService;
-
-    /**
-     * 인증메일 보내기
-     * 바인딩 에러 -> 등록된 이매일인지 -> 메일을 보낸지 2분내일떄 -> 메일 첫요청/재요청 -> MailException
-     */
-    @PostMapping("/email")
-    public @ResponseBody ResponseWrapperDto validationMailSend(@RequestBody @Valid UserEmailDto emailDto, BindingResult bindingResult) {
-        if (bindingResult.hasErrors()) {
-            return ResponseWrapperDto.of(fieldError(bindingResult), ResponseStatus.INVALID_FORMAT);
-        }
-
-        if (userJoinService.findEmailByEmail(emailDto)) {
-            return ResponseWrapperDto.of(ResponseStatus.USER_EMAIL_UNAVAILABLE);
-        }
-
-        Integer time = validationService.isValidationSent(emailDto);
-        if (time != null && time > 0) {
-            return ResponseWrapperDto.of(time, ResponseStatus.USER_EMAIL_VALIDATION_ALREADY_SENT);
-        }
-
-        try {
-            if(time == null){
-                validationService.saveValidation(emailDto, validationService.sendEmail(emailDto));
-            } else {
-                validationService.updateValidation(emailDto, validationService.sendEmail(emailDto));
-            }
-            return ResponseWrapperDto.of(emailDto, ResponseStatus.USER_EMAIL_VALIDATION_SENT);
-        } catch (MailException e) {
-            return ResponseWrapperDto.of(ResponseStatus.USER_EMAIL_VALIDATION_SENT_FAILED);
-        }
-    }
 
     /**
      * 바인딩 에러 -> 등록된 이메일인지
@@ -91,7 +58,7 @@ public class UserJoinController {
      * 바인딩 에러 -> 인증코드 확인(이메일. 인증코드) -> 오래된 인증코드인지 확인 -> 등록된 이름인지
      */
     @PostMapping
-    public @ResponseBody ResponseWrapperDto userAdd(@RequestBody @Valid UserAccountDto joinDto, BindingResult bindingResult) {
+    public @ResponseBody ResponseWrapperDto userAdd(@RequestBody @Valid UserJoinDto joinDto, BindingResult bindingResult) {
         if (bindingResult.hasErrors()) {
             return ResponseWrapperDto.of(fieldError(bindingResult), ResponseStatus.INVALID_FORMAT);
         }

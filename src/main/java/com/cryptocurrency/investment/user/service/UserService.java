@@ -8,6 +8,7 @@ import com.cryptocurrency.investment.user.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -17,31 +18,34 @@ import java.util.UUID;
 @Service
 @RequiredArgsConstructor
 public class UserService {
-
-    @Value("${jwt.secret}")
-    private String SECRET_KEY;
-
-    private final JwtUtils jwtUtils;
-
+    private final PasswordEncoder passwordEncoder;
     private final UserRepository userRepository;
 
-    public Optional<UserAccount> findUser(String token) {
-        UUID id = UUID.fromString(jwtUtils.getSubject(token));
+    public Optional<UserAccount> findUser(Authentication authentication) {
+        UUID id = UUID.fromString(authentication.getName());
         return userRepository.findById(id);
     }
 
-    public int modifyUser(String token, UserModifyDto modifyDto) {
-        UUID id = UUID.fromString(jwtUtils.getSubject(token));
-        return userRepository.updateUser(id, modifyDto.username(), modifyDto.password());
+    public int modifyUser(Authentication authentication, UserModifyDto modifyDto) {
+        UUID id = UUID.fromString(authentication.getName());
+        String username = modifyDto.username();
+        String password = passwordEncoder.encode(modifyDto.password());
+        return userRepository.updateUser(id, username, password);
     }
 
-    public int deleteUser(String token) {
-        UUID id = UUID.fromString(jwtUtils.getSubject(token));
+    /**
+     * Soft Delete Hard Delete 구현
+     * @param authentication
+     * @return
+     */
+    public int deleteUser(Authentication authentication) {
+        UUID id = UUID.fromString(authentication.getName());
         return userRepository.deleteById(id);
     }
 
     public boolean findUserByUsername(UserModifyDto modifyDto) {
-        return userRepository.existsByUsername(modifyDto.username());
+        String username = modifyDto.username();
+        return userRepository.existsByUsername(username);
     }
 
     public Optional<UserAccount> findUserById(Authentication authentication) {

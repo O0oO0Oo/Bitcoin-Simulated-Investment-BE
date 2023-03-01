@@ -37,12 +37,12 @@ public class PriceInfoService {
 
     public text redisFindPrice(String name) {
         return text.of(
-                redisRepository.findTop300ByNameOrderByTimestampDesc(name));
+                redisRepository.findTop300ByNameOrderByTimestampDesc(name.toUpperCase()));
     }
 
     public ResponsePriceInfoDto mysqlFindPrice(String name, Long interval, String unit){
         return ResponsePriceInfoDto.fromMysql(
-                mysqlRepository.findByTimestampInterval(name,interval * intervalUnitConverter.get(unit)),
+                mysqlRepository.findByTimestampInterval(name.toUpperCase(),interval * intervalUnitConverter.get(unit)),
                 interval,
                 unit
         );

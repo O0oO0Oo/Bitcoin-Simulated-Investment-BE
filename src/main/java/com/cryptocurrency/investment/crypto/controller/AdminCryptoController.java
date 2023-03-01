@@ -17,7 +17,7 @@ import java.util.Arrays;
 import java.util.stream.Collectors;
 
 @RestController
-@RequestMapping("/admin/crypto")
+@RequestMapping("/admin/cryptos")
 @RequiredArgsConstructor
 public class AdminCryptoController {
 

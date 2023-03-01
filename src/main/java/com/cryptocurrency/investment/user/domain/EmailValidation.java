@@ -18,13 +18,13 @@ public class EmailValidation {
     @Column(unique = true)
     private String email;
 
-    private String validation;
+    private Integer code;
 
     private LocalDateTime timestamp;
 
-    public EmailValidation(String email, String validation) {
+    public EmailValidation(String email, Integer code) {
         this.email = email;
-        this.validation = validation;
+        this.code = code;
         this.timestamp = LocalDateTime.now().truncatedTo(ChronoUnit.SECONDS);
     }
 }

@@ -24,6 +24,9 @@ spring.datasource:
 logging:
   level:
     web: debug
+    org:
+      springframework:
+        security: TRACE
 
 # Quartz
 spring.quartz:

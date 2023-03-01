@@ -11,6 +11,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -22,6 +23,13 @@ public class CryptoService {
      */
     public List<Crypto> userFindCrypto() {
         return cryptoRepository.findAllExceptStatus();
+    }
+
+    public List<Crypto> userFindCrypto(List<String> names) {
+        List<String> upperCaseNames = names.stream().map(
+                name -> name.toUpperCase()
+        ).collect(Collectors.toList());
+        return cryptoRepository.findByNameIn(upperCaseNames);
     }
 
     public List<Crypto> userFindStatusCrypto(CryptoStatus status) {

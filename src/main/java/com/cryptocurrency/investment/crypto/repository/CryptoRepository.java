@@ -3,6 +3,7 @@ package com.cryptocurrency.investment.crypto.repository;
 import com.cryptocurrency.investment.crypto.domain.Crypto;
 import com.cryptocurrency.investment.crypto.domain.CryptoStatus;
 import jakarta.transaction.Transactional;
+import org.springframework.data.jpa.repository.EntityGraph;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
@@ -31,9 +32,12 @@ public interface CryptoRepository extends JpaRepository<Crypto,Long> {
             , nativeQuery = true)
     Optional<Crypto> findByNameExceptStatus(@Param("name") String name);
 
+    List<Crypto> findByNameIn(List<String> names);
+
     /**
      * Admin
      */
+
     Boolean existsByName(String name);
 
     @Modifying

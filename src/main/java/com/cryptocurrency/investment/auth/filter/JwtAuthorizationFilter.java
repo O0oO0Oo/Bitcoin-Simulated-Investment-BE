@@ -77,18 +77,41 @@ public class JwtAuthorizationFilter extends OncePerRequestFilter {
         String servletPath = request.getServletPath();
         String method = request.getMethod();
 
-        if (servletPath.equals("/user") && method.equals("POST")) {
+        String[] getPaths = {
+                "/users/email",
+                "/users/username",
+                "/cryptos/price",
+                "/cryptos/list",
+        };
+
+        if(method.equals("GET") && Arrays.stream(getPaths).anyMatch(
+                path -> servletPath.startsWith(path)
+        )){
             return true;
         }
 
-        if ((servletPath.equals("/user/username") || servletPath.equals("/user/email"))
-                && method.equals("GET")) {
+        String[] getMatchPaths = {
+                "/cryptos/[^/]+/list"
+        };
+
+        if(method.equals("GET") && Arrays.stream(getMatchPaths).anyMatch(
+                path -> servletPath.matches(path)
+        )){
             return true;
         }
 
-        String[] paths = {"/crypto/price","/user/login"};
-        return Arrays.stream(paths).anyMatch(
-                path -> request.getServletPath().startsWith(path)
-        );
+        String[] postPaths = {
+                "/users/login",
+                "/users/email",
+                "/users"
+        };
+
+        if(method.equals("POST") && Arrays.stream(postPaths).anyMatch(
+                path -> servletPath.equals(path)
+        )){
+            return true;
+        }
+
+        return false;
     }
 }

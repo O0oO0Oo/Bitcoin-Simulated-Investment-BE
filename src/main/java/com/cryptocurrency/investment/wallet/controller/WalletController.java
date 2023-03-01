@@ -2,8 +2,6 @@ package com.cryptocurrency.investment.wallet.controller;
 
 import com.cryptocurrency.investment.config.response.ResponseStatus;
 import com.cryptocurrency.investment.config.response.ResponseWrapperDto;
-import com.cryptocurrency.investment.user.domain.UserAccount;
-import com.cryptocurrency.investment.user.service.UserService;
 import com.cryptocurrency.investment.wallet.domain.Wallet;
 import com.cryptocurrency.investment.wallet.service.WalletService;
 import lombok.RequiredArgsConstructor;
@@ -14,11 +12,10 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
-import java.util.Optional;
 import java.util.UUID;
 
 @RestController
-@RequestMapping("/user/wallet")
+@RequestMapping("/users/wallet")
 @RequiredArgsConstructor
 public class WalletController {
     private final WalletService walletService;

@@ -11,13 +11,13 @@ import lombok.Value;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
-@RequestMapping("/crypto/price")
+@RequestMapping("/cryptos")
 @RequiredArgsConstructor
 public class CryptoController {
 
     private final CryptoService cryptoService;
 
-    @GetMapping
+    @GetMapping("/list")
     public @ResponseBody ResponseWrapperDto cryptoList() {
         return ResponseWrapperDto.of(ResponseStatus.CRYPTO_REQUEST_SUCCEED,
                 cryptoService.userFindCrypto().stream()
@@ -27,7 +27,7 @@ public class CryptoController {
         );
     }
 
-    @GetMapping("/{status}")
+    @GetMapping("/{status}/list")
     public @ResponseBody ResponseWrapperDto cryptoStatusList(@PathVariable("status") String status) {
         if (status.equals("NOT_USER")) {
             return ResponseWrapperDto.of(status, ResponseStatus.CRYPTO_INVALID_STATUS);

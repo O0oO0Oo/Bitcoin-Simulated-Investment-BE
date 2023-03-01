@@ -20,7 +20,7 @@ public interface UserRepository extends JpaRepository<UserAccount, Long> {
     @Modifying
     @Transactional
     @Query(value =
-            "UPDATE user_account ua" +
+            "UPDATE user_account ua " +
                     "SET ua.username = :username, ua.password = :password " +
                     "WHERE ua.id = :id", nativeQuery = true)
     int updateUser(@Param("id") UUID id,

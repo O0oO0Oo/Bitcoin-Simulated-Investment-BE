@@ -4,14 +4,11 @@ import com.cryptocurrency.investment.config.response.ResponseStatus;
 import com.cryptocurrency.investment.config.response.ResponseWrapperDto;
 import com.cryptocurrency.investment.crypto.domain.Crypto;
 import com.cryptocurrency.investment.crypto.service.CryptoService;
-import com.cryptocurrency.investment.price.Service.PriceInfoService;
-import com.cryptocurrency.investment.price.domain.redis.PriceInfoRedis;
 import com.cryptocurrency.investment.price.dto.scheduler.PricePerMinuteDto;
 import com.cryptocurrency.investment.transaction.domain.Transaction;
-import com.cryptocurrency.investment.transaction.domain.TransactionStatus;
 import com.cryptocurrency.investment.transaction.domain.TransactionType;
 import com.cryptocurrency.investment.transaction.dto.request.TransactionRequestDto;
-import com.cryptocurrency.investment.transaction.dto.response.text;
+import com.cryptocurrency.investment.transaction.dto.response.TransactionResponseDto;
 import com.cryptocurrency.investment.transaction.service.TransactionService;
 import com.cryptocurrency.investment.user.domain.UserAccount;
 import com.cryptocurrency.investment.user.service.UserService;
@@ -26,7 +23,7 @@ import java.time.LocalDateTime;
 import java.util.Optional;
 
 @RestController
-@RequestMapping("/crypto/tx")
+@RequestMapping("/cryptos/tx")
 @RequiredArgsConstructor
 public class TransactionController {
     private final TransactionService transactionService;
@@ -52,6 +49,11 @@ public class TransactionController {
     public @ResponseBody ResponseWrapperDto txNameAdd(@RequestBody TransactionRequestDto txDto,
                                                       Authentication authentication,
                                                       BindingResult bindingResult) {
+        // 현재가에 팔기가 아닐때
+        if (txDto.type().equals(TransactionType.RESERVE_SELL) || txDto.type().equals(TransactionType.RESERVE_BUY)) {
+            return ResponseWrapperDto.of(ResponseStatus.TRANSACTION_SELL_FAILED_INVALID_TYPE);
+        }
+
         Optional<UserAccount> userOpt = userService.findUserById(authentication);
 
         // 유저 정보 불러오기 실패
@@ -96,7 +98,16 @@ public class TransactionController {
         if (txDto.type().equals(TransactionType.BUY) &&
                 (user.getMoney() < txDto.amount() * price)
         ) {
-            return ResponseWrapperDto.of(ResponseStatus.TRANSACTION_BUY_REQUEST_FAILED_MONEY_LAKED, text.of(price, LocalDateTime.now()));
+            return ResponseWrapperDto.of(
+                    ResponseStatus.TRANSACTION_BUY_REQUEST_FAILED_MONEY_LAKED
+            );
+        }
+
+        // 1000원 단위 이하 주문시 취소
+        if (price * txDto.amount() < 1000.0) {
+            return ResponseWrapperDto.of(
+                    ResponseStatus.TRANSACTION_REQUEST_FAILED_1000
+            );
         }
 
         Transaction tx = transactionService.addTx(
@@ -109,7 +120,7 @@ public class TransactionController {
         walletService.addWallet(wallet, user, price, txDto);
 
         return ResponseWrapperDto.of(
-                ResponseStatus.TRANSACTION_REQUEST_SUCCEED, text.of(price, LocalDateTime.now())
+                ResponseStatus.TRANSACTION_REQUEST_SUCCEED, TransactionResponseDto.of(tx, user)
         );
     }
 }
