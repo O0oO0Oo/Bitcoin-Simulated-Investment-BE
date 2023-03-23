@@ -1,10 +1,9 @@
 package com.cryptocurrency.investment.price.controller;
 
-import com.cryptocurrency.investment.config.response.ResponseWrapperDto;
 import com.cryptocurrency.investment.config.response.ResponseStatus;
+import com.cryptocurrency.investment.config.response.ResponseWrapperDto;
 import com.cryptocurrency.investment.price.Service.PriceInfoService;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -29,6 +28,9 @@ public class PriceController {
         }
     }
 
+    /**
+     * TODO 분단위 결과 개선
+     */
     @GetMapping("/{name}/{interval}/{unit}")
     public ResponseWrapperDto mysqlPriceList(@PathVariable String name,
                                                     @PathVariable Long interval,

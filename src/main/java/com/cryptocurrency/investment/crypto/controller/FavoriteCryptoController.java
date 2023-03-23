@@ -63,11 +63,8 @@ public class FavoriteCryptoController {
     public @ResponseBody ResponseWrapperDto favoriteCryptoRemove(@RequestBody FavoriteRequestDto favoriteRequestDto,
                                                                  Authentication authentication,
                                                                  BindingResult bindingResult) {
-        if(!favoriteCryptoService.removeFavoriteCrypto(favoriteRequestDto, authentication)){
-            return ResponseWrapperDto.of(ResponseStatus.FAVORITE_CRYPTO_REMOVED);
-        }
-        else{
-            return ResponseWrapperDto.of(ResponseStatus.FAVORITE_CRYPTO_REMOVED_FAILED);
-        }
+        favoriteCryptoService.removeFavoriteCrypto(favoriteRequestDto, authentication);
+        return ResponseWrapperDto.of(ResponseStatus.CRYPTO_DELETE_SUCCEED,
+                favoriteCryptoService.findFavoriteCrypto(authentication));
     }
 }

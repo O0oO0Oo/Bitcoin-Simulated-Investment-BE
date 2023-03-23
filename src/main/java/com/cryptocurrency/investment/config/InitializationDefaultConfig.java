@@ -19,6 +19,7 @@ import java.time.LocalDate;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.UUID;
+import java.util.concurrent.ConcurrentHashMap;
 import java.util.stream.Collectors;
 
 @Configuration
@@ -78,7 +79,7 @@ public class InitializationDefaultConfig {
     @Bean
     public PricePerMinuteDto pricePerMinuteDto() {
         PricePerMinuteDto pricePerMinuteDto = new PricePerMinuteDto();
-        pricePerMinuteDto.setPriceHashMap(new HashMap<>());
+        pricePerMinuteDto.setPriceHashMap(new ConcurrentHashMap<>());
         return pricePerMinuteDto;
     }
 }

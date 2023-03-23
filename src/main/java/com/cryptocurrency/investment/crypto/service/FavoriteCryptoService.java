@@ -29,24 +29,44 @@ public class FavoriteCryptoService {
         return favoriteCryptoRepository.findByUserAccount_Id(id);
     }
 
+    /**
+     * 같은값 두번 추가되는 문제 고치기
+     * @param userAccount
+     * @param cryptos
+     * @return
+     */
     public List<FavoriteCrypto> addFavoriteCrypto(UserAccount userAccount,
                                                   List<Crypto> cryptos) {
+
+
+        List<String> names = favoriteCryptoRepository.findByUserAccount_Id(userAccount.getId())
+                .stream().map(
+                        favorite -> favorite.getName()
+                ).collect(Collectors.toList());
+
         List<FavoriteCrypto> favoriteCryptos = cryptos.stream().map(
                 crypto -> {
-                    FavoriteCrypto favoriteCrypto = new FavoriteCrypto();
-                    favoriteCrypto.setCrypto(crypto);
-                    favoriteCrypto.setName(crypto.getName());
-                    favoriteCrypto.setUserAccount(userAccount);
-                    return favoriteCrypto;
+                    if(!names.contains(crypto.getName())) {
+                        FavoriteCrypto favoriteCrypto = new FavoriteCrypto();
+                        favoriteCrypto.setCrypto(crypto);
+                        favoriteCrypto.setName(crypto.getName());
+                        favoriteCrypto.setUserAccount(userAccount);
+                        return favoriteCrypto;
+                    }
+                    return null;
                 }
         ).collect(Collectors.toList());
 
         return favoriteCryptoRepository.saveAll(favoriteCryptos);
     }
 
-    public boolean removeFavoriteCrypto(FavoriteRequestDto favoriteRequestDto,
+    public void removeFavoriteCrypto(FavoriteRequestDto favoriteRequestDto,
                                         Authentication authentication){
         UUID id = UUID.fromString(authentication.getName());
-        return favoriteCryptoRepository.deleteByUserAccount_IdAndNameIn(id, favoriteRequestDto.names());
+        List<FavoriteCrypto> favoriteCryptosForDelete = favoriteCryptoRepository.findByUserAccount_IdAndNameIn(
+                id,
+                favoriteRequestDto.names()
+        );
+        favoriteCryptoRepository.deleteAll(favoriteCryptosForDelete);
     }
 }

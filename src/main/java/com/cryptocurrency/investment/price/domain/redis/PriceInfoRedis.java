@@ -15,21 +15,16 @@ import java.util.concurrent.TimeUnit;
 @RedisHash("price")
 @AllArgsConstructor
 public class PriceInfoRedis implements Serializable{
-    
     @Id
     @JsonIgnore
     private String id;
-
     @Indexed
     private String name;
-
     @Indexed
     private Long timestamp;
-
     private double price;
 
     @TimeToLive(unit = TimeUnit.SECONDS)
     @JsonIgnore
     private Integer expiration;
 }
-
