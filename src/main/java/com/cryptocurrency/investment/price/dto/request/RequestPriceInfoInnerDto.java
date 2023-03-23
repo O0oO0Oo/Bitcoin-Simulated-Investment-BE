@@ -1,23 +1,20 @@
 package com.cryptocurrency.investment.price.dto.request;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import lombok.Data;
 
-
-/**
- * only use @param closing_price
- * TODO: 사용하지 않는 데이터 저장 안하도록 개선
- */
 @Data
+@JsonIgnoreProperties({
+        "opening_price",
+        "min_price",
+        "max_price",
+        "units_traded",
+        "acc_trade_value",
+        "prev_closing_price",
+        "units_traded_24H",
+        "acc_trade_value_24H",
+        "fluctate_24H",
+        "fluctate_rate_24H"})
 public class RequestPriceInfoInnerDto {
-    private String opening_price;
     private String closing_price;
-    private String min_price;
-    private String max_price;
-    private String units_traded;
-    private String acc_trade_value;
-    private String prev_closing_price;
-    private String units_traded_24H;
-    private String acc_trade_value_24H;
-    private String fluctate_24H;
-    private String fluctate_rate_24H;
 }

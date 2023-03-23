@@ -20,14 +20,14 @@ public interface CryptoRepository extends JpaRepository<Crypto,Long> {
     List<Crypto> findByStatus(CryptoStatus status);
 
     @Query(value = "SELECT * " +
-            "FROM Crypto c " +
+            "FROM crypto c " +
             "WHERE c.status != 'NOT_USED' or c.status != 'DELETED'"
             , nativeQuery = true)
     List<Crypto> findAllExceptStatus();
 
     @Query(value = "SELECT * " +
             "FROM (" +
-            "SELECT  * FROM Crypto WHERE name = :name) as c " +
+            "SELECT  * FROM crypto WHERE name = :name) as c " +
             "WHERE c.status != 'NOT_USED' or c.status != 'DELETED'"
             , nativeQuery = true)
     Optional<Crypto> findByNameExceptStatus(@Param("name") String name);
