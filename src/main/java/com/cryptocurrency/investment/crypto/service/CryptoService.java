@@ -28,7 +28,7 @@ public class CryptoService {
     public List<Crypto> userFindCrypto(List<String> names) {
         List<String> upperCaseNames = names.stream().map(
                 name -> name.toUpperCase()
-        ).collect(Collectors.toList());
+        ).toList();
         return cryptoRepository.findByNameIn(upperCaseNames);
     }
 

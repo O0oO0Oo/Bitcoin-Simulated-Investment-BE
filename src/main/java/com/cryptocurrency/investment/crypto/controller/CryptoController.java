@@ -5,9 +5,7 @@ import com.cryptocurrency.investment.config.response.ResponseWrapperDto;
 import com.cryptocurrency.investment.crypto.domain.CryptoStatus;
 import com.cryptocurrency.investment.crypto.dto.CryptoDto;
 import com.cryptocurrency.investment.crypto.service.CryptoService;
-import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
-import lombok.Value;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
