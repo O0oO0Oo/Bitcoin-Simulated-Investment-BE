@@ -4,17 +4,13 @@ import com.cryptocurrency.investment.auth.dto.AuthenticationResponseDto;
 import com.cryptocurrency.investment.auth.jwt.JwtUtils;
 import com.cryptocurrency.investment.config.response.ResponseStatus;
 import com.cryptocurrency.investment.config.response.ResponseWrapperDto;
-import com.cryptocurrency.investment.user.domain.UserAccount;
 import com.cryptocurrency.investment.user.service.UserService;
-import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
-
-import java.util.Optional;
 
 @RestController
 @RequestMapping("/users")

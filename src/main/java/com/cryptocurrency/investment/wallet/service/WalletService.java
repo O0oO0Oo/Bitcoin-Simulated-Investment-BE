@@ -1,8 +1,5 @@
 package com.cryptocurrency.investment.wallet.service;
 
-import com.cryptocurrency.investment.crypto.domain.Crypto;
-import com.cryptocurrency.investment.price.domain.redis.PriceInfoRedis;
-import com.cryptocurrency.investment.transaction.domain.Transaction;
 import com.cryptocurrency.investment.transaction.domain.TransactionType;
 import com.cryptocurrency.investment.transaction.dto.request.TransactionRequestDto;
 import com.cryptocurrency.investment.user.domain.UserAccount;

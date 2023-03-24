@@ -2,18 +2,15 @@ package com.cryptocurrency.investment.crypto.controller;
 
 import com.cryptocurrency.investment.config.response.ResponseStatus;
 import com.cryptocurrency.investment.config.response.ResponseWrapperDto;
-import com.cryptocurrency.investment.crypto.domain.CryptoStatus;
 import com.cryptocurrency.investment.crypto.dto.CryptoDto;
 import com.cryptocurrency.investment.crypto.dto.CryptoModifyDto;
 import com.cryptocurrency.investment.crypto.service.CryptoService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
-import org.springframework.security.core.Authentication;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.FieldError;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.Arrays;
 import java.util.stream.Collectors;
 
 @RestController
