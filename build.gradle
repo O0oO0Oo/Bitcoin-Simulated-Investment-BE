@@ -17,10 +17,6 @@ configurations {
 
 tasks.withType(Jar) {
 	duplicatesStrategy = DuplicatesStrategy.EXCLUDE
-
-	manifest {
-		attributes["Main-Class"] = "com.cryptocurrency.investment.InvestmentApplication"
-	}
 }
 
 repositories {
