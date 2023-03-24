@@ -18,13 +18,8 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.net.HttpURLConnection;
 import java.net.URL;
-import java.text.MessageFormat;
-import java.time.Duration;
-import java.time.LocalDateTime;
-import java.time.ZoneOffset;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.concurrent.ConcurrentSkipListMap;
 
 @Component
 @RequiredArgsConstructor
@@ -63,7 +58,7 @@ public class EverySecondRequestJsonJob implements Job {
 
         Long localDateTime = readValue.getInnerData().getTimestamp();
         Long finalLocalDateTime = localDateTime - localDateTime % 1000;
-        LocalDateTime start = LocalDateTime.now();
+//        LocalDateTime start = LocalDateTime.now();
 
 //        readValue.getFields().forEach((k, v) -> {
 //            if (!pricePerMinuteDto.getPriceHashMap().containsKey(k)) {
@@ -86,33 +81,8 @@ public class EverySecondRequestJsonJob implements Job {
 //                    TIME));
 //        });
 
-//        List<PriceInfoRedis> priceInfoRedis = new ArrayList<>();
-//
-//        readValue.getFields().forEach((k, v) -> {
-//            if (!pricePerMinuteDto.getPriceHashMap().containsKey(k)) {
-//                pricePerMinuteDto.getPriceHashMap().put(
-//                        k,
-//                        new PricePerMinuteDataDto(
-//                                v.getClosing_price()
-//                        )
-//                );
-//            } else {
-//                pricePerMinuteDto.getPriceHashMap().get(k)
-//                        .setPrice(v.getClosing_price());
-//            }
-//
-//            priceInfoRedis.add(
-//                    new PriceInfoRedis(
-//                            k + finalLocalDateTime,
-//                            k,
-//                            finalLocalDateTime,
-//                            Double.parseDouble(v.getClosing_price()),
-//                            TIME
-//                    ));
-//        });
-//        redisRepository.saveAll(priceInfoRedis);
+        List<PriceInfoRedis> priceInfoRedis = new ArrayList<>();
 
-        // TODO : JpaRepository 를 사용하면 1~2초 걸림, redisTemplate 사용할 것
         readValue.getFields().forEach((k, v) -> {
             if (!pricePerMinuteDto.getPriceHashMap().containsKey(k)) {
                 pricePerMinuteDto.getPriceHashMap().put(
@@ -126,13 +96,38 @@ public class EverySecondRequestJsonJob implements Job {
                         .setPrice(v.getClosing_price());
             }
 
-            stringRedisTemplate.opsForValue().set(
+            priceInfoRedis.add(
+                    new PriceInfoRedis(
                             k + finalLocalDateTime,
-                    (new PriceInfoRedis(k + finalLocalDateTime, k, finalLocalDateTime, Double.parseDouble(v.getClosing_price()), TIME )).toString()
-                    );
+                            k,
+                            finalLocalDateTime,
+                            Double.parseDouble(v.getClosing_price()),
+                            TIME
+                    ));
         });
+        redisRepository.saveAll(priceInfoRedis);
 
-        System.out.println(MessageFormat.format("Thread: {0}, id : {1} , Time : {2} end ",
-                Thread.currentThread().getName(),Thread.currentThread().getId(), Duration.between(start, LocalDateTime.now()).toMillis()));
+//        // TODO : JpaRepository 를 사용하면 1~2초 걸림, redisTemplate 사용할 것
+//        readValue.getFields().forEach((k, v) -> {
+//            if (!pricePerMinuteDto.getPriceHashMap().containsKey(k)) {
+//                pricePerMinuteDto.getPriceHashMap().put(
+//                        k,
+//                        new PricePerMinuteDataDto(
+//                                v.getClosing_price()
+//                        )
+//                );
+//            } else {
+//                pricePerMinuteDto.getPriceHashMap().get(k)
+//                        .setPrice(v.getClosing_price());
+//            }
+//
+//            stringRedisTemplate.opsForValue().set(
+//                            k + finalLocalDateTime,
+//                    (new PriceInfoRedis(k + finalLocalDateTime, k, finalLocalDateTime, Double.parseDouble(v.getClosing_price()), TIME )).toString()
+//                    );
+//        });
+
+//        System.out.println(MessageFormat.format("Thread: {0}, id : {1} , Time : {2} end ",
+//                Thread.currentThread().getName(),Thread.currentThread().getId(), Duration.between(start, LocalDateTime.now()).toMillis()));
     }
 }
