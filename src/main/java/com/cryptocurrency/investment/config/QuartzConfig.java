@@ -2,22 +2,27 @@ package com.cryptocurrency.investment.config;
 
 import com.cryptocurrency.investment.price.scheduler.quartz.EveryMinuteSaveJsonJob;
 import com.cryptocurrency.investment.price.scheduler.quartz.EverySecondRequestJsonJob;
+import lombok.RequiredArgsConstructor;
 import org.quartz.JobDetail;
+import org.quartz.SimpleScheduleBuilder;
 import org.quartz.Trigger;
-import org.springframework.beans.factory.annotation.Autowired;
+import org.quartz.TriggerBuilder;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.scheduling.quartz.*;
+import org.springframework.scheduling.quartz.CronTriggerFactoryBean;
+import org.springframework.scheduling.quartz.JobDetailFactoryBean;
+import org.springframework.scheduling.quartz.SchedulerFactoryBean;
+import org.springframework.scheduling.quartz.SpringBeanJobFactory;
 
 import javax.sql.DataSource;
 
 @Configuration
+@RequiredArgsConstructor
 public class QuartzConfig{
 
-    @Autowired
-    ApplicationContext applicationContext;
+    private final ApplicationContext applicationContext;
     @Bean("springBeanJobFactory")
     public SpringBeanJobFactory springBeanJobFactory() {
         SpringBeanJobFactory jobFactory = new SpringBeanJobFactory();
@@ -39,13 +44,16 @@ public class QuartzConfig{
     }
 
     @Bean("everySecondRequestJsonTrigger")
-    public SimpleTriggerFactoryBean everySecondRequestJsonTrigger(
+    public Trigger everySecondRequestJsonTrigger(
             @Qualifier("everySecondRequestJsonJobDetail") JobDetail requestJob){
-        SimpleTriggerFactoryBean factoryBean = new SimpleTriggerFactoryBean();
-        factoryBean.setJobDetail(requestJob);
-        factoryBean.setStartDelay(0);
-        factoryBean.setRepeatInterval(1000);
-        return factoryBean;
+        return TriggerBuilder.newTrigger()
+                .forJob(requestJob)
+                .withSchedule(
+                        SimpleScheduleBuilder.simpleSchedule()
+                                .repeatForever()
+                                .withIntervalInMilliseconds(500)
+                )
+                .build();
     }
 
     @Bean("everySecondRequestJsonScheduler")
