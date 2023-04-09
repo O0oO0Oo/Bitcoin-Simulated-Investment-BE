@@ -19,10 +19,12 @@ public class PriceController {
     /**
      * TODO: Paging 으로 최적화 하기
      */
-    @GetMapping("/{name}/1s")
-    public ResponseWrapperDto redisPriceList(@PathVariable String name) {
+    @GetMapping("/{name}/{interval}/s")
+    public ResponseWrapperDto redisPriceList(@PathVariable String name,
+                                             @PathVariable Long interval) {
         try {
-            return ResponseWrapperDto.of(ResponseStatus.PRICE_REQUEST_SUCCEED, priceInfoService.redisFindPrice(name));
+            return ResponseWrapperDto.of(ResponseStatus.PRICE_REQUEST_SUCCEED,
+                    priceInfoService.redisFindPrice(name, interval));
         } catch (Exception e) {
             return ResponseWrapperDto.of(ResponseStatus.PRICE_REQUEST_FAILED);
         }
