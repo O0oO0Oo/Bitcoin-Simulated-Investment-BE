@@ -1,6 +1,7 @@
 package com.cryptocurrency.investment.transaction.dto.response;
 
 import com.cryptocurrency.investment.transaction.domain.Transaction;
+import com.cryptocurrency.investment.transaction.domain.TransactionType;
 import com.cryptocurrency.investment.user.domain.UserAccount;
 import org.apache.catalina.User;
 
@@ -10,6 +11,7 @@ public record TransactionResponseDto(
         String name,
         double price,
         double amount,
+        TransactionType type,
         LocalDateTime timestamp,
         double money
 ) {
@@ -18,6 +20,7 @@ public record TransactionResponseDto(
                 tx.getName(),
                 tx.getPrice(),
                 tx.getAmount(),
+                tx.getType(),
                 tx.getTimestamp(),
                 user.getMoney()
         );
