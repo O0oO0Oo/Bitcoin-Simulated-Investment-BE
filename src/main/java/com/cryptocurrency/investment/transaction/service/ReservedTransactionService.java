@@ -4,20 +4,25 @@ import com.cryptocurrency.investment.crypto.domain.Crypto;
 import com.cryptocurrency.investment.crypto.repository.CryptoRepository;
 import com.cryptocurrency.investment.transaction.domain.Transaction;
 import com.cryptocurrency.investment.transaction.domain.TransactionStatus;
-import com.cryptocurrency.investment.transaction.dto.request.DeleteReservedTransactionDto;
+import com.cryptocurrency.investment.transaction.domain.TransactionType;
+import com.cryptocurrency.investment.transaction.dto.request.DeleteReservedTransactionRequestDto;
 import com.cryptocurrency.investment.transaction.dto.request.ReservedTransactionRequestDto;
 import com.cryptocurrency.investment.transaction.dto.response.TransactionListResponseDto;
 import com.cryptocurrency.investment.transaction.dto.response.TransactionResponseDto;
 import com.cryptocurrency.investment.transaction.exception.EntityNotFoundException;
+import com.cryptocurrency.investment.transaction.exception.InsufficientAmountException;
 import com.cryptocurrency.investment.transaction.exception.InsufficientFundException;
 import com.cryptocurrency.investment.transaction.repository.TransactionRepository;
 import com.cryptocurrency.investment.user.domain.UserAccount;
 import com.cryptocurrency.investment.user.repository.UserRepository;
+import com.cryptocurrency.investment.wallet.domain.Wallet;
+import com.cryptocurrency.investment.wallet.repository.WalletRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.UUID;
 import java.util.stream.Collectors;
 
@@ -31,12 +36,13 @@ public class ReservedTransactionService {
     private final TransactionRepository transactionRepository;
     private final CryptoRepository cryptoRepository;
     private final UserRepository userRepository;
+    private final WalletRepository walletRepository;
     public List<TransactionListResponseDto> findReservedTx(Authentication authentication) {
         return transactionRepository.findAllReservedTxByUserAccount_Id(UUID.fromString(authentication.getName())).stream()
-                .map(TransactionListResponseDto::of).collect(Collectors.toList());
+                .map(tx -> TransactionListResponseDto.of(tx)).collect(Collectors.toList());
     }
 
-    public TransactionResponseDto addReservedTx(Authentication authentication, ReservedTransactionRequestDto reservedTransactionRequestDto) throws Exception {
+    public TransactionResponseDto addReservedBuyTx(Authentication authentication, ReservedTransactionRequestDto reservedTransactionRequestDto) throws Exception {
         UserAccount userAccount = userRepository.findById(UUID.fromString(authentication.getName()))
                 .orElseThrow(() -> new EntityNotFoundException("User"));
 
@@ -53,7 +59,7 @@ public class ReservedTransactionService {
         transaction.setName(reservedTransactionRequestDto.name());
         transaction.setPrice(reservedTransactionRequestDto.price());
         transaction.setAmount(reservedTransactionRequestDto.amount());
-        transaction.setType(reservedTransactionRequestDto.type());
+        transaction.setType(TransactionType.RESERVE_BUY);
         transaction.setStatus(TransactionStatus.RESERVED);
         transaction.setUserAccount(userAccount);
         transaction.setCrypto(crypto);
@@ -63,25 +69,67 @@ public class ReservedTransactionService {
                 userAccount);
     }
 
-    public List<TransactionListResponseDto> deleteReservedTx(Authentication authentication, DeleteReservedTransactionDto deleteReservedTransactionDto) {
+    public TransactionResponseDto addReservedSellTx(Authentication authentication, ReservedTransactionRequestDto reservedTransactionRequestDto) {
         UserAccount userAccount = userRepository.findById(UUID.fromString(authentication.getName()))
                 .orElseThrow(() -> new EntityNotFoundException("User"));
 
-        List<Transaction> allReservedTxByIdsAndUserAccountId = transactionRepository.findAllReservedTxByIdsAndUserAccount_Id(
-                deleteReservedTransactionDto.id(),
+        Crypto crypto = cryptoRepository.findByNameExceptStatus(reservedTransactionRequestDto.name())
+                .orElseThrow(() -> new EntityNotFoundException("Crypto"));
+
+        Wallet wallet = walletRepository.findByUserAccount_IdAndName(UUID.fromString(authentication.getName()), crypto.getName())
+                .orElseThrow(() -> new InsufficientAmountException("Insufficient amount."));
+
+        if (wallet.getAmount() < reservedTransactionRequestDto.amount()) {
+            throw new InsufficientAmountException("Insufficient amount.");
+        }
+
+        wallet.setAmount(wallet.getAmount() - reservedTransactionRequestDto.amount());
+
+        Transaction transaction = new Transaction();
+        transaction.setName(reservedTransactionRequestDto.name());
+        transaction.setPrice(reservedTransactionRequestDto.price());
+        transaction.setAmount(reservedTransactionRequestDto.amount());
+        transaction.setType(TransactionType.RESERVE_SELL);
+        transaction.setStatus(TransactionStatus.RESERVED);
+        transaction.setUserAccount(userAccount);
+        transaction.setCrypto(crypto);
+
+        return TransactionResponseDto.of(
+                transactionRepository.save(transaction),
+                userAccount);
+    }
+
+    public List<TransactionListResponseDto> deleteReservedTx(Authentication authentication, DeleteReservedTransactionRequestDto deleteReservedTransactionRequestDto) {
+        UserAccount userAccount = userRepository.findById(UUID.fromString(authentication.getName()))
+                .orElseThrow(() -> new EntityNotFoundException("User"));
+
+        List<Transaction> transactions = transactionRepository.findAllReservedTxByIdsAndUserAccount_Id(
+                deleteReservedTransactionRequestDto.ids(),
                 userAccount.getId()
         );
-        allReservedTxByIdsAndUserAccountId.forEach(
-                tx -> userAccount.setMoney(
-                        userAccount.getMoney() + tx.getAmount() * tx.getPrice()
-                )
+
+        transactions.forEach(
+                tx -> {
+                    if(tx.getType().equals(TransactionType.RESERVE_BUY)) {
+                        userAccount.setMoney(
+                                userAccount.getMoney() + tx.getAmount() * tx.getPrice()
+                        );
+                    }
+                    else{
+                        Optional<Wallet> walletOpt = walletRepository.findByUserAccount_IdAndName(userAccount.getId(), tx.getName());
+                        if (walletOpt.isPresent()) {
+                            Wallet wallet = walletOpt.get();
+                            wallet.setAmount(wallet.getAmount() + tx.getAmount());
+                        }
+                    }
+                }
         );
 
         transactionRepository.deleteAllReservedTxByIdAndUserAccount_Id(
-                deleteReservedTransactionDto.id(),
+                deleteReservedTransactionRequestDto.ids(),
                 userAccount.getId());
 
-        return allReservedTxByIdsAndUserAccountId.stream()
+        return transactions.stream()
                 .map(TransactionListResponseDto::of).collect(Collectors.toList());
     }
 }

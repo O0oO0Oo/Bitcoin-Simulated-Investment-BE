@@ -25,56 +25,6 @@ import java.util.stream.Collectors;
 @Configuration
 @RequiredArgsConstructor
 public class InitializationDefaultConfig {
-    private final UserRepository userRepository;
-    private final CryptoRepository cryptoRepository;
-    private final PasswordEncoder passwordEncoder;
-
-    @Bean
-    public void initializeDB(){
-        // 기본 유저 등록
-        if(!userRepository.existsByEmail("Admin@frincoin.com")) {
-            UserAccount admin = new UserAccount();
-            UserAccount test = new UserAccount();
-
-            admin.setEmail("Admin@frincoin.com");
-            admin.setUsername("Admin");
-            admin.setPassword(passwordEncoder.encode("admin"));
-            admin.setId(
-                    UUID.nameUUIDFromBytes((admin.getEmail() + admin.getUsername()).getBytes())
-            );
-            admin.setRole(Role.ADMIN);
-
-            test.setEmail("test@frincoin.com");
-            test.setUsername("test");
-            test.setPassword(passwordEncoder.encode("test"));
-            test.setId(
-                    UUID.nameUUIDFromBytes((test.getEmail() + test.getUsername()).getBytes())
-            );
-
-            userRepository.save(admin);
-            userRepository.save(test);
-        }
-        
-        // 기본 코인 리스트
-        if (cryptoRepository.count() == 0) {
-            try {
-                ClassPathResource resource = new ClassPathResource("data/BaseCryptoList.txt");
-                cryptoRepository.saveAll(
-                        Files.readAllLines(
-                                Paths.get(resource.getURI())
-                                )
-                                .stream()
-                                .map(
-                                        name -> {
-                                            return new Crypto(name, CryptoStatus.NORMAL);
-                                        }
-                                ).collect(Collectors.toList())
-                );
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-        }
-    }
 
     @Bean
     public PricePerMinuteDto pricePerMinuteDto() {

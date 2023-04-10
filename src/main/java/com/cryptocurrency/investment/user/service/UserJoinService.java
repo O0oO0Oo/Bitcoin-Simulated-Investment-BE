@@ -24,7 +24,7 @@ public class UserJoinService {
         user.setUsername(joinDto.username());
         user.setPassword(passwordEncoder.encode(joinDto.password()));
         user.setId(
-                UUID.nameUUIDFromBytes((user.getEmail() + user.getUsername()).getBytes())
+                UUID.nameUUIDFromBytes(user.getEmail().getBytes())
         );
         return userRepository.save(user).getEmail();
     }

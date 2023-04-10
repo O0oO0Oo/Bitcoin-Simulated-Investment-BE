@@ -16,8 +16,8 @@ public interface TransactionRepository extends JpaRepository<Transaction, Long> 
     List<Transaction> findByUserAccount_IdAndName(UUID id, String name);
 
     @Query(value = "" +
-            "SELECT t " +
-            "FROM Transaction t " +
+            "SELECT * " +
+            "FROM transaction t " +
             "WHERE t.user_account_id = :userId " +
             "AND (t.type = 'RESERVE_BUY' OR t.type = 'RESERVE_SELL') ", nativeQuery = true)
     List<Transaction> findAllReservedTxByUserAccount_Id(@Param("userId") UUID id);

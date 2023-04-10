@@ -2,7 +2,7 @@ package com.cryptocurrency.investment.transaction.controller;
 
 import com.cryptocurrency.investment.config.response.ResponseStatus;
 import com.cryptocurrency.investment.config.response.ResponseWrapperDto;
-import com.cryptocurrency.investment.transaction.dto.request.DeleteReservedTransactionDto;
+import com.cryptocurrency.investment.transaction.dto.request.DeleteReservedTransactionRequestDto;
 import com.cryptocurrency.investment.transaction.dto.request.ReservedTransactionRequestDto;
 import com.cryptocurrency.investment.transaction.service.ReservedTransactionService;
 import jakarta.validation.Valid;
@@ -19,23 +19,31 @@ public class ReservedTransactionController {
 
     @GetMapping
     public @ResponseBody ResponseWrapperDto reservedList(Authentication authentication){
-        return ResponseWrapperDto.of(ResponseStatus.TRANSACTION_REQUEST_SUCCEED,
+        return ResponseWrapperDto.of(ResponseStatus.TRANSACTION_LIST_REQUEST_SUCCEED,
                 reservedService.findReservedTx(authentication));
     }
 
-    @PostMapping
-    public @ResponseBody ResponseWrapperDto reservedAdd(@RequestBody @Valid
+    @PostMapping("/buy")
+    public @ResponseBody ResponseWrapperDto reservedBuyAdd(@RequestBody @Valid
                                                         ReservedTransactionRequestDto reservedTransactionRequestDto,
-                                                        Authentication authentication) throws Exception {
+                                                           Authentication authentication) throws Exception {
         return ResponseWrapperDto.of(ResponseStatus.TRANSACTION_REQUEST_SUCCEED,
-                reservedService.addReservedTx(authentication, reservedTransactionRequestDto));
+                reservedService.addReservedBuyTx(authentication, reservedTransactionRequestDto));
+    }
+
+    @PostMapping("/sell")
+    public @ResponseBody ResponseWrapperDto reservedSellAdd(@RequestBody @Valid
+                                                           ReservedTransactionRequestDto reservedTransactionRequestDto,
+                                                           Authentication authentication) throws Exception {
+        return ResponseWrapperDto.of(ResponseStatus.TRANSACTION_REQUEST_SUCCEED,
+                reservedService.addReservedSellTx(authentication, reservedTransactionRequestDto));
     }
 
     @DeleteMapping
     public @ResponseBody ResponseWrapperDto reservedRemove(@RequestBody @Valid
-                                                           DeleteReservedTransactionDto deleteReservedTransactionDto,
+                                                               DeleteReservedTransactionRequestDto deleteReservedTransactionRequestDto,
                                                            Authentication authentication) {
         return ResponseWrapperDto.of(ResponseStatus.TRANSACTION_REQUEST_SUCCEED,
-                reservedService.deleteReservedTx(authentication, deleteReservedTransactionDto));
+                reservedService.deleteReservedTx(authentication, deleteReservedTransactionRequestDto));
     }
 }

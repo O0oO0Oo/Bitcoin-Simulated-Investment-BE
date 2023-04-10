@@ -6,10 +6,9 @@ import lombok.Data;
 public record ReservedTransactionRequestDto(
         String name,
         double price,
-        double amount,
-        TransactionType type
+        double amount
 ) {
-    public static ReservedTransactionRequestDto of(String name, double price, double amount, TransactionType type) {
-        return new ReservedTransactionRequestDto(name, price, amount, type);
+    public static ReservedTransactionRequestDto of(String name, double price, double amount) {
+        return new ReservedTransactionRequestDto(name, price, amount);
     }
 }

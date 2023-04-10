@@ -36,8 +36,14 @@ class ReservedTransactionControllerTest {
     @MockBean
     private ReservedTransactionService reservedTransactionService;
 
+    /**
+     * 예약 거래 조회
+     * 예약 거래 구매 등록
+     * 예약 거래 판매 등록
+     * 예약 거래 삭제
+     */
     @Test
-    @DisplayName("에약 거래 목록 조회 GET")
+    @DisplayName("에약 거래 조회")
     void reservedList_whenGetValidRequest_thenReturn1000Code() throws Exception {
         // given
         RequestBuilder requestBuilder =
@@ -58,18 +64,17 @@ class ReservedTransactionControllerTest {
     }
 
     @Test
-    @DisplayName("예약 거래 등록 POST")
-    void reservedAdd_whenGetValidRequest_thenReturn1000Code() throws Exception {
+    @DisplayName("예약 거래 구매 등록")
+    void reservedBuyAdd_whenGetValidRequest_thenReturn1000Code() throws Exception {
         // given
         String request = "" +
                 "{" +
                 "\"name\":\"BTC\"," +
                 "\"price\":\"1000\"," +
-                "\"amount\":\"10\"," +
-                "\"type\":\"RESERVE_BUY\"" +
+                "\"amount\":\"10\"" +
                 "}";
         RequestBuilder requestBuilder =
-                MockMvcRequestBuilders.post("/cryptos/tx/reserved")
+                MockMvcRequestBuilders.post("/cryptos/tx/reserved/buy")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(request);
 
@@ -87,7 +92,35 @@ class ReservedTransactionControllerTest {
     }
 
     @Test
-    @DisplayName("예약 거래 삭제 DELETE")
+    @DisplayName("예약 거래 판매 등록")
+    void reservedSellAdd_whenGetValidRequest_thenReturn1000Code() throws Exception {
+        // given
+        String request = "" +
+                "{" +
+                "\"name\":\"BTC\"," +
+                "\"price\":\"1000\"," +
+                "\"amount\":\"10\"" +
+                "}";
+        RequestBuilder requestBuilder =
+                MockMvcRequestBuilders.post("/cryptos/tx/reserved/buy")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(request);
+
+        // when
+        MvcResult mvcResult = mockMvc.perform(requestBuilder).andDo(MockMvcResultHandlers.print())
+                .andReturn();
+        String responseBodyAsString = mvcResult.getResponse().getContentAsString();
+        ResponseWrapperDto responseWrapperDto = new ObjectMapper().readValue(
+                responseBodyAsString, ResponseWrapperDto.class
+        );
+
+        // then
+        Assertions.assertEquals(1000,responseWrapperDto.code());
+        Assertions.assertEquals(HttpStatus.OK.value(), mvcResult.getResponse().getStatus());
+    }
+    
+    @Test
+    @DisplayName("예약 거래 삭제")
     void reservedRemove_whenGetValidRequest_thenReturn1000Code() throws Exception {
         // given
         String request = "" +
