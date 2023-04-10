@@ -15,6 +15,12 @@ configurations {
 	}
 }
 
+bootJar {
+	from("src/main/resources") {
+		include "data/BaseCryptoList.txt"
+	}
+}
+
 tasks.withType(Jar) {
 	duplicatesStrategy = DuplicatesStrategy.EXCLUDE
 }

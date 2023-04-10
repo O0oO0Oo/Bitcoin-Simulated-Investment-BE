@@ -8,12 +8,14 @@ import com.cryptocurrency.investment.user.domain.UserAccount;
 import com.cryptocurrency.investment.user.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.boot.CommandLineRunner;
-import org.springframework.core.io.ClassPathResource;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
 
-import java.nio.file.Files;
-import java.nio.file.Paths;
+import java.io.BufferedReader;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.nio.charset.StandardCharsets;
+import java.util.List;
 import java.util.UUID;
 import java.util.stream.Collectors;
 
@@ -52,17 +54,13 @@ public class InitializeDB implements CommandLineRunner {
         // 기본 코인 리스트
         if (cryptoRepository.count() == 0) {
             try {
-                ClassPathResource resource = new ClassPathResource("data/BaseCryptoList.txt");
+                InputStream inputStream = getClass().getClassLoader().getResourceAsStream("data/BaseCryptoList.txt");
+                List<String> lines = new BufferedReader(new InputStreamReader(inputStream, StandardCharsets.UTF_8))
+                        .lines().collect(Collectors.toList());
                 cryptoRepository.saveAll(
-                        Files.readAllLines(
-                                        Paths.get(resource.getURI())
-                                )
-                                .stream()
-                                .map(
-                                        name -> {
-                                            return new Crypto(name, CryptoStatus.NORMAL);
-                                        }
-                                ).collect(Collectors.toList())
+                        lines.stream()
+                                .map(name -> new Crypto(name, CryptoStatus.NORMAL))
+                                .collect(Collectors.toList())
                 );
             } catch (Exception e) {
                 e.printStackTrace();
