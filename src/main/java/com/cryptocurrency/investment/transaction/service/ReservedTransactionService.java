@@ -12,7 +12,7 @@ import com.cryptocurrency.investment.transaction.dto.response.TransactionRespons
 import com.cryptocurrency.investment.transaction.exception.EntityNotFoundException;
 import com.cryptocurrency.investment.transaction.exception.InsufficientAmountException;
 import com.cryptocurrency.investment.transaction.exception.InsufficientFundException;
-import com.cryptocurrency.investment.transaction.repository.TransactionRepository;
+import com.cryptocurrency.investment.transaction.repository.mysql.TransactionMysqlRepository;
 import com.cryptocurrency.investment.user.domain.UserAccount;
 import com.cryptocurrency.investment.user.repository.UserRepository;
 import com.cryptocurrency.investment.wallet.domain.Wallet;
@@ -33,12 +33,12 @@ public class ReservedTransactionService {
     /**
      * TODO : 수만명이 같은가격에 예약, 매초마다 현재가격에 예약한 유저가 있는지 확인, 있다면 수만개의 입력이 일어남 이것을 어떻게 처리할지
      */
-    private final TransactionRepository transactionRepository;
+    private final TransactionMysqlRepository transactionMysqlRepository;
     private final CryptoRepository cryptoRepository;
     private final UserRepository userRepository;
     private final WalletRepository walletRepository;
     public List<TransactionListResponseDto> findReservedTx(Authentication authentication) {
-        return transactionRepository.findAllReservedTxByUserAccount_Id(UUID.fromString(authentication.getName())).stream()
+        return transactionMysqlRepository.findAllReservedTxByUserAccount_Id(UUID.fromString(authentication.getName())).stream()
                 .map(tx -> TransactionListResponseDto.of(tx)).collect(Collectors.toList());
     }
 
@@ -65,7 +65,7 @@ public class ReservedTransactionService {
         transaction.setCrypto(crypto);
 
         return TransactionResponseDto.of(
-                transactionRepository.save(transaction),
+                transactionMysqlRepository.save(transaction),
                 userAccount);
     }
 
@@ -95,7 +95,7 @@ public class ReservedTransactionService {
         transaction.setCrypto(crypto);
 
         return TransactionResponseDto.of(
-                transactionRepository.save(transaction),
+                transactionMysqlRepository.save(transaction),
                 userAccount);
     }
 
@@ -103,7 +103,7 @@ public class ReservedTransactionService {
         UserAccount userAccount = userRepository.findById(UUID.fromString(authentication.getName()))
                 .orElseThrow(() -> new EntityNotFoundException("User"));
 
-        List<Transaction> transactions = transactionRepository.findAllReservedTxByIdsAndUserAccount_Id(
+        List<Transaction> transactions = transactionMysqlRepository.findAllReservedTxByIdsAndUserAccount_Id(
                 deleteReservedTransactionRequestDto.ids(),
                 userAccount.getId()
         );
@@ -125,7 +125,7 @@ public class ReservedTransactionService {
                 }
         );
 
-        transactionRepository.deleteAllReservedTxByIdAndUserAccount_Id(
+        transactionMysqlRepository.deleteAllReservedTxByIdAndUserAccount_Id(
                 deleteReservedTransactionRequestDto.ids(),
                 userAccount.getId());
 

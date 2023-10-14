@@ -23,7 +23,7 @@ public class RequestPriceInfoDto {
         private Long timestamp;
         @JsonAnySetter
         public void setField(String field, RequestPriceInfoInnerDto value) {
-            fields.put(field, value);
+            fields.put(field.toUpperCase(), value);
         }
     }
 }

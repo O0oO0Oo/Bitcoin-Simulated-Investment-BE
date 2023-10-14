@@ -18,6 +18,7 @@ public interface CryptoRepository extends JpaRepository<Crypto,Long> {
      */
     List<Crypto> findByStatus(CryptoStatus status);
 
+    // 서비스중인 코인 목록
     @Query(value = "SELECT * " +
             "FROM crypto c " +
             "WHERE c.status != 'NOT_USED' or c.status != 'DELETED'"

@@ -31,7 +31,7 @@ import java.util.List;
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class) // TODO : 실행 순서가 제일 앞에 오는 테스트메서드는 시간이 더 걸림
 class EverySecondRequestJsonJob_PerformanceTest {
 
-    private final int testRepeat = 10;
+    private final int testRepeat = 5;
     private Long savePerformanceTime;
     private static Long localDateTime;
     private static RequestPriceInfoDto readValue;

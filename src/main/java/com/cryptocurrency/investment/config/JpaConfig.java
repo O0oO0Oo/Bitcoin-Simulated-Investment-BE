@@ -10,7 +10,7 @@ import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
                 "com.cryptocurrency.investment.user.repository",
                 "com.cryptocurrency.investment.crypto.repository",
                 "com.cryptocurrency.investment.wallet.repository",
-                "com.cryptocurrency.investment.transaction.repository"
+                "com.cryptocurrency.investment.transaction.repository.mysql"
         })
 public class JpaConfig {
 }

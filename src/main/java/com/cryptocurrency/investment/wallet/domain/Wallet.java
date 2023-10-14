@@ -14,10 +14,10 @@ public class Wallet {
     @JsonIgnore
     private Long id;
     @JsonIgnore
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne
     private Crypto crypto;
     @JsonIgnore
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne
     private UserAccount userAccount;
     private String name;
     private double totalCost = 0;

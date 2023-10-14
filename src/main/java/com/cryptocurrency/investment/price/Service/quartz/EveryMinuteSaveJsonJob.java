@@ -1,4 +1,4 @@
-package com.cryptocurrency.investment.price.scheduler.quartz;
+package com.cryptocurrency.investment.price.Service.quartz;
 
 import com.cryptocurrency.investment.price.dto.scheduler.PricePerMinuteDto;
 import com.cryptocurrency.investment.price.repository.mysql.PriceInfoMysqlRepository;

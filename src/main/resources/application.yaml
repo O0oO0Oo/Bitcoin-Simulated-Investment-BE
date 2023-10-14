@@ -1,7 +1,7 @@
 # Jpa
 spring.jpa:
   hibernate:
-    ddl-auto: create
+    ddl-auto: update
   show-sql: false
   open-in-view: true
   properties:
@@ -12,12 +12,12 @@ spring.jpa:
 # Redis
 spring.data:
   redis:
-    host: redis-container
+    host: localhost
     port: 6379
 
 # Mysql
 spring.datasource:
-  url: jdbc:mysql://mysql-container:3306/frincoin
+  url: jdbc:mysql://192.168.35.247:3306/frincoin
   username: coinuser
   password: dptmzbdpfrhdqn3#
   driver-class-name: com.mysql.cj.jdbc.Driver
@@ -29,6 +29,14 @@ logging:
     org:
       springframework:
         security: TRACE
+
+# batch
+spring.batch:
+  # Job 의 자동시작 끄기
+  job:
+    enabled: false
+  jdbc:
+    initialize-schema: always
 
 # Quartz
 spring.quartz:

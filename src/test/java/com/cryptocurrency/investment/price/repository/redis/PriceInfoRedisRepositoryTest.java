@@ -23,7 +23,6 @@ import java.util.List;
 import java.util.concurrent.ConcurrentHashMap;
 
 
-@ExtendWith(MockitoExtension.class)
 @DataJpaTest(properties = "spring.config.location=classpath:/application-test.yaml")
 @Import({RedisConfig.class, JpaConfig.class, PriceInfoRedisRepository.class})
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)

@@ -1,7 +1,7 @@
 package com.cryptocurrency.investment.config;
 
-import com.cryptocurrency.investment.price.scheduler.quartz.EveryMinuteSaveJsonJob;
-import com.cryptocurrency.investment.price.scheduler.quartz.EverySecondRequestJsonJob;
+import com.cryptocurrency.investment.price.Service.quartz.EveryMinuteSaveJsonJob;
+import com.cryptocurrency.investment.price.Service.quartz.EverySecondRequestJsonJob;
 import lombok.RequiredArgsConstructor;
 import org.quartz.JobDetail;
 import org.quartz.SimpleScheduleBuilder;

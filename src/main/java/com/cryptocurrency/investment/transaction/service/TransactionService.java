@@ -5,7 +5,7 @@ import com.cryptocurrency.investment.transaction.domain.Transaction;
 import com.cryptocurrency.investment.transaction.domain.TransactionStatus;
 import com.cryptocurrency.investment.transaction.dto.request.TransactionRequestDto;
 import com.cryptocurrency.investment.transaction.dto.response.TransactionListResponseDto;
-import com.cryptocurrency.investment.transaction.repository.TransactionRepository;
+import com.cryptocurrency.investment.transaction.repository.mysql.TransactionMysqlRepository;
 import com.cryptocurrency.investment.user.domain.UserAccount;
 import com.cryptocurrency.investment.user.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
@@ -19,7 +19,7 @@ import java.util.stream.Collectors;
 @Service
 @RequiredArgsConstructor
 public class TransactionService {
-    private final TransactionRepository transactionRepository;
+    private final TransactionMysqlRepository transactionMysqlRepository;
     private final UserRepository userRepository;
 
     /**
@@ -43,7 +43,7 @@ public class TransactionService {
      */
     public List<TransactionListResponseDto> findTx(Authentication authentication) {
         UUID id = UUID.fromString(authentication.getName());
-        return transactionRepository.findByUserAccount_Id(id)
+        return transactionMysqlRepository.findByUserAccount_Id(id)
                 .stream()
                 .map(
                         tx -> TransactionListResponseDto.of(tx)
@@ -52,7 +52,7 @@ public class TransactionService {
 
     public List<TransactionListResponseDto> findNameTx(Authentication authentication, String name) {
         UUID id = UUID.fromString(authentication.getName());
-        return transactionRepository.findByUserAccount_IdAndName(id, name.toUpperCase())
+        return transactionMysqlRepository.findByUserAccount_IdAndName(id, name.toUpperCase())
                 .stream()
                 .map(
                         tx -> TransactionListResponseDto.of(tx)
@@ -78,6 +78,6 @@ public class TransactionService {
         user.getTransactions().add(tx);
         crypto.getTransactions().add(tx);
 
-        return transactionRepository.save(tx);
+        return transactionMysqlRepository.save(tx);
     }
 }

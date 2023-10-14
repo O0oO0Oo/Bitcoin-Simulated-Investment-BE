@@ -13,7 +13,7 @@ public record TransactionListResponseDto(
         double amount,
         TransactionStatus status,
         TransactionType type,
-        LocalDateTime timestamp
+        Long timestamp
 ) {
     public static TransactionListResponseDto of(Transaction tx) {
         return new TransactionListResponseDto(

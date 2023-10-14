@@ -26,13 +26,13 @@ public class Crypto {
     @Column(nullable = false, length = 20)
     private CryptoStatus status;
     @JsonIgnore
-    @OneToMany(mappedBy = "crypto", fetch = FetchType.LAZY)
+    @OneToMany(mappedBy = "crypto")
     private List<Wallet> wallets = new ArrayList<>();
     @JsonIgnore
-    @OneToMany(mappedBy = "crypto", fetch = FetchType.LAZY)
+    @OneToMany(mappedBy = "crypto")
     private List<Transaction> transactions = new ArrayList<>();
     @JsonIgnore
-    @OneToMany(mappedBy = "crypto", fetch = FetchType.LAZY)
+    @OneToMany(mappedBy = "crypto")
     private List<FavoriteCrypto> favoriteCryptos = new ArrayList<>();
     public Crypto(String name, CryptoStatus status) {
         this.name = name;

@@ -15,10 +15,10 @@ public class Transaction {
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
     @JsonIgnore
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne
     private Crypto crypto;
     @JsonIgnore
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne
     private UserAccount userAccount;
     private String name;
     private double price;
@@ -27,5 +27,5 @@ public class Transaction {
     TransactionType type;
     @Enumerated(EnumType.STRING)
     private TransactionStatus status = TransactionStatus.PROGRESSED;
-    private LocalDateTime timestamp = LocalDateTime.now();
+    private Long timestamp = System.currentTimeMillis();
 }

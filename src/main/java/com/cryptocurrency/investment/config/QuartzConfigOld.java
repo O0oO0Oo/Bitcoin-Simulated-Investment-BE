@@ -1,7 +1,7 @@
 package com.cryptocurrency.investment.config;
 
-import com.cryptocurrency.investment.price.scheduler.quartz.EveryMinuteSaveJsonJob;
-import com.cryptocurrency.investment.price.scheduler.quartz.EverySecondRequestJsonJob;
+import com.cryptocurrency.investment.price.Service.quartz.EveryMinuteSaveJsonJob;
+import com.cryptocurrency.investment.price.Service.quartz.EverySecondRequestJsonJob;
 import org.quartz.*;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.boot.CommandLineRunner;

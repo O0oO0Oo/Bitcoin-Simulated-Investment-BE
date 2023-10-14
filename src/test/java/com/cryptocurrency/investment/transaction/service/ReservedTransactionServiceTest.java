@@ -7,19 +7,17 @@ import com.cryptocurrency.investment.transaction.domain.TransactionStatus;
 import com.cryptocurrency.investment.transaction.domain.TransactionType;
 import com.cryptocurrency.investment.transaction.dto.request.DeleteReservedTransactionRequestDto;
 import com.cryptocurrency.investment.transaction.dto.request.ReservedTransactionRequestDto;
-import com.cryptocurrency.investment.transaction.dto.request.TransactionRequestDto;
 import com.cryptocurrency.investment.transaction.dto.response.TransactionListResponseDto;
 import com.cryptocurrency.investment.transaction.dto.response.TransactionResponseDto;
 import com.cryptocurrency.investment.transaction.exception.EntityNotFoundException;
 import com.cryptocurrency.investment.transaction.exception.InsufficientAmountException;
 import com.cryptocurrency.investment.transaction.exception.InsufficientFundException;
-import com.cryptocurrency.investment.transaction.repository.TransactionRepository;
+import com.cryptocurrency.investment.transaction.repository.mysql.TransactionMysqlRepository;
 import com.cryptocurrency.investment.user.domain.UserAccount;
 import com.cryptocurrency.investment.user.repository.UserRepository;
 import com.cryptocurrency.investment.wallet.domain.Wallet;
 import com.cryptocurrency.investment.wallet.repository.WalletRepository;
 import org.assertj.core.api.Assertions;
-import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -66,7 +64,7 @@ class ReservedTransactionServiceTest {
     // 테스트 유저의 UUID
     private UUID id = UUID.fromString("0bf81996-e28f-338a-bd55-c540176329c5");
     @Mock
-    private TransactionRepository transactionRepository;
+    private TransactionMysqlRepository transactionMysqlRepository;
     @Mock
     private UserRepository userRepository;
     @Mock
@@ -87,7 +85,7 @@ class ReservedTransactionServiceTest {
                 new UsernamePasswordAuthenticationToken(id, "password");
 
         // when
-        Mockito.when(transactionRepository.findAllReservedTxByUserAccount_Id(id))
+        Mockito.when(transactionMysqlRepository.findAllReservedTxByUserAccount_Id(id))
                 .thenReturn(Collections.emptyList());
         List<TransactionListResponseDto> reservedTx = reservedTransactionService.findReservedTx(authentication);
 
@@ -142,7 +140,7 @@ class ReservedTransactionServiceTest {
                 .thenReturn(Optional.of(userAccount));
         Mockito.when(cryptoRepository.findByNameExceptStatus("BBQ"))
                 .thenReturn(Optional.of(crypto));
-        Mockito.when(transactionRepository.save(Mockito.any(Transaction.class)))
+        Mockito.when(transactionMysqlRepository.save(Mockito.any(Transaction.class)))
                 .thenReturn(transaction);
 
         TransactionResponseDto returnDto = reservedTransactionService.addReservedBuyTx(authentication, requestDto);
@@ -291,7 +289,7 @@ class ReservedTransactionServiceTest {
                 .thenReturn(Optional.of(crypto));
         Mockito.when(walletRepository.findByUserAccount_IdAndName(id, "BBQ"))
                 .thenReturn(Optional.of(wallet));
-        Mockito.when(transactionRepository.save(Mockito.any(Transaction.class)))
+        Mockito.when(transactionMysqlRepository.save(Mockito.any(Transaction.class)))
                 .thenReturn(transaction);
 
         TransactionResponseDto returnDto = reservedTransactionService.addReservedSellTx(authentication, requestDto);
@@ -422,11 +420,11 @@ class ReservedTransactionServiceTest {
         // when
         Mockito.when(userRepository.findById(UUID.fromString(authentication.getName())))
                 .thenReturn(Optional.of(userAccount));
-        Mockito.when(transactionRepository.findAllReservedTxByIdsAndUserAccount_Id(
+        Mockito.when(transactionMysqlRepository.findAllReservedTxByIdsAndUserAccount_Id(
                 deleteReservedTransactionRequestDto.ids(),
                 id
         )).thenReturn(Collections.emptyList());
-        Mockito.when(transactionRepository.deleteAllReservedTxByIdAndUserAccount_Id(
+        Mockito.when(transactionMysqlRepository.deleteAllReservedTxByIdAndUserAccount_Id(
                 deleteTxList, id
         )).thenReturn(deleteTxList.size());
         List<TransactionListResponseDto> deletedReservedTx = reservedTransactionService.deleteReservedTx(authentication, deleteReservedTransactionRequestDto);
