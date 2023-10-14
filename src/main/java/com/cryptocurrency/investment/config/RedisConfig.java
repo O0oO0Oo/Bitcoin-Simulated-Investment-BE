@@ -15,7 +15,9 @@ import org.springframework.data.redis.repository.configuration.EnableRedisReposi
  * TODO: Redis의 Expire 설정하기
  */
 @Configuration
-@EnableRedisRepositories(basePackages = "com.cryptocurrency.investment.price.repository.redis",
+@EnableRedisRepositories(basePackages =
+        {"com.cryptocurrency.investment.price.repository.redis",
+        "com.cryptocurrency.investment.transaction.repository.redis"},
         enableKeyspaceEvents = RedisKeyValueAdapter.EnableKeyspaceEvents.ON_DEMAND,
         shadowCopy = RedisKeyValueAdapter.ShadowCopy.OFF)
 public class RedisConfig {

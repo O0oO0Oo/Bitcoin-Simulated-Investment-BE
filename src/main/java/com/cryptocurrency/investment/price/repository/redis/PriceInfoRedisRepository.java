@@ -35,11 +35,12 @@ public class PriceInfoRedisRepository {
         List<String> data = connection.zSetCommands().zRevRange(
                 ("price:" + name.toUpperCase()).getBytes(),
                 0, 180
-        ).stream().map( bytes -> String.valueOf(new String(bytes))).toList();
+        ).stream().map( bytes -> new String(bytes)).toList();
         connection.close();
         return data;
     }
 
+    // Pagination 을 위함
     public List<String> findByNameAndLocalDateTime(String name, Long localDateTime) {
         RedisConnection connection = redisConnectionFactory.getConnection();
         List<String> data = connection.zSetCommands().zRevRangeByScore(
@@ -48,7 +49,7 @@ public class PriceInfoRedisRepository {
                 localDateTime,
                 0,
                 180
-        ).stream().map( bytes -> String.valueOf(new String(bytes))).toList();
+        ).stream().map( bytes -> new String(bytes)).toList();
         connection.close();
         return data;
     }

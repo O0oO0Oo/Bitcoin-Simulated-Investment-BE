@@ -12,7 +12,7 @@ public record TransactionResponseDto(
         double price,
         double amount,
         TransactionType type,
-        LocalDateTime timestamp,
+        Long timestamp,
         double money
 ) {
     static public TransactionResponseDto of(Transaction tx, UserAccount user) {

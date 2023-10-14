@@ -1,10 +1,12 @@
-package com.cryptocurrency.investment.price.scheduler.quartz;
+package com.cryptocurrency.investment.price.Service.quartz;
 
 import com.cryptocurrency.investment.price.dto.request.RequestPriceInfoDto;
 import com.cryptocurrency.investment.price.dto.scheduler.PricePerMinuteDto;
 import com.cryptocurrency.investment.price.repository.redis.PriceInfoRedisRepository;
 import com.cryptocurrency.investment.price.util.HttpJsonRequest;
+import com.cryptocurrency.investment.price.util.PriceMessageQueue;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.quartz.Job;
 import org.quartz.JobExecutionContext;
 import org.quartz.JobExecutionException;
@@ -14,12 +16,18 @@ import org.springframework.stereotype.Component;
 import java.io.IOException;
 
 @Component
+@Slf4j
 @RequiredArgsConstructor
 public class EverySecondRequestJsonJob implements Job {
     private final PricePerMinuteDto pricePerMinuteDto;
     private final PriceInfoRedisRepository priceInfoRedisRepository;
-
     private final HttpJsonRequest httpJsonRequest;
+
+    private final PriceMessageQueue priceMessageBlockingQueue;
+
+    // 이전에 사용된 예약거래 처리
+    // private final ReservedTransactionProcessingService reservedTransactionProcessingService;
+
     /**
      * TODO : SortedSet 으로 저장하면서 expire 옵션을 사용안함,
      */
@@ -38,6 +46,15 @@ public class EverySecondRequestJsonJob implements Job {
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
+        log.info("Price time {}",readValue.getInnerData().getTimestamp());
+
+//        // 이전에 사용된 예약거래 처리
+//        CompletableFuture.runAsync(
+//                () -> reservedTransactionProcessingService.reservedTransactionProcessing(readValue.getFields())
+//        );
+
+        // 가격정보 큐에 데이터 삽입
+        priceMessageBlockingQueue.produce(readValue.getFields(),readValue.getInnerData().getTimestamp());
 
         Long localDateTime = readValue.getInnerData().getTimestamp();
         Long finalLocalDateTime = localDateTime - localDateTime % 1000;

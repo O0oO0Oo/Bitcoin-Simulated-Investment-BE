@@ -1,2 +1,14 @@
 # Bitcoin-Simulated-Investment-BE
-This is for people who want to invest on bitcoin but scared of investing their money.
+
+---
+## Point
+
+- 레디스를 이용한 
+- 스프링 배치를 이용한
+- JWT 로그인 구현
+
+---
+## Built With
+
+---
+## 

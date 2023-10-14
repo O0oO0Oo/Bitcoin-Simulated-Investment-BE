@@ -23,7 +23,6 @@ public class PriceInfoRedis implements Serializable{
     @Indexed
     private Long timestamp;
     private double price;
-
     @TimeToLive(unit = TimeUnit.SECONDS)
     @JsonIgnore
     private Integer expiration;

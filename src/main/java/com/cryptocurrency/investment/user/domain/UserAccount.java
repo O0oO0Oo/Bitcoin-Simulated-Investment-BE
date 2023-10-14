@@ -17,6 +17,21 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
+/**
+ * TODO : UUID 를 Pk 로 사용하면 성능상 문제가 발생
+ * @Data
+ * @Entity
+ * @NoArgsConstructor
+ * @Table(name = "user_account",
+ *         indexes = @Index(name = "idx_uuid", columnList = "id", unique = true))
+ * public class UserAccount {
+ *     @Id
+ *     @GeneratedValue(strategy = GenerationType.IDENTITY)
+ *     private Long pk;
+ *     @Column(columnDefinition = "BINARY(16)")
+ *
+ *     로 교환하기
+ */
 @Data
 @Entity
 @NoArgsConstructor
